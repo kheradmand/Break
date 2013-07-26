@@ -1,0 +1,22 @@
+o LLVM's instrcution printing facility is non-thread safe. Printing instructions 
+while performing read only operations on them lead to unpredictable behavior. 
+
+o A slow way to print LLVM instructions using cerr:
+   std::string instBuffer;
+   raw_string_ostream instStringOStream(instBuffer);
+   inst->print(instStringOStream);    
+   string printValue = instStringOStream.str();
+   cerr << printValue << endl;*
+
+o Using the prop-level option, you can toggle the propagation of multithreadedness in the 
+following way:
+  - First, if this flag is not enabled, the function that checks for multithreaded APIs 
+    compares the function name to a set of standard substrings that indicate multithreadness
+    such as "pthread" or some app-specific things like "apr_thread" (for apache)
+  - If you enable this option (Meaning give it a value greater than 0, which will be the
+    propagation level), then basically the multithreaded API check only looks for standard pthread
+    calls, but also checks to see if the called function in question is part of the set of
+    multithreaded APIs. Let us say for level=1, this set is populated as follows: If during the
+    analysis a function with the pthread SPI is called, then its caller (or caller up to the level
+    number) is marked as both being multithreaded and as being a multithreaded API.
+     
