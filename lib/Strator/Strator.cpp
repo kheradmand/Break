@@ -532,8 +532,9 @@ void Strator::StratorWorker::detectRaces(const Instruction& inst, bool isStore, 
 			cerr << "   lock: " << *it << endl;
 		}
 #endif
-
-		valueToAccessTypeMap[operand].push_back(accessType);
+		if (!multithreadedFunctionMap[fName])
+			return;
+		valueToAccessTypeMap[operand]./*push_back*/insert(accessType);
 	}
 }
 
@@ -608,68 +609,73 @@ static void printValuePair(const char *Msg, bool P, const Value *V1,
 
 void Strator::investigateAccesses(Strator::StratorWorker::ValueToAccessTypeMap::iterator valIt1,
 		Strator::StratorWorker::ValueToAccessTypeMap::iterator valIt2, raw_ostream& file, int& raceCount){
+
 	//printValuePair("checking ", true, valIt1->first, valIt2->first, NULL);
-	std::vector<Strator::StratorWorker::AccessType*>::iterator accIt1, accIt2;
+	std::/*vector*/set<Strator::StratorWorker::AccessType*>::iterator accIt1, accIt2;
 	for(accIt1 = valIt1->second.begin(); accIt1 != valIt1->second.end(); ++accIt1){
 		for(accIt2 = valIt2->second.begin(); accIt2 != accIt1 && accIt2 != valIt2->second.end(); ++accIt2){
 			if((*accIt1)->isStore || (*accIt2)->isStore){
-				if((*accIt1)->isMultiThreaded && (*(accIt2))->isMultiThreaded){
-//					/// if the accessed values are local and, it they are not modified, there is no race
-//					if(localValueInfo){
-//						LocalIdentifier::LocalValueInfo::iterator localValIt;
-//						localValIt = localValueInfo->find(valIt->first);
-//						if(localValIt != localValueInfo->end()){
-//							if(!localValIt->second){
-//								/// TODO: Here we ignore some definitely local accesses
-//								continue;
-//							}
-//						}
-//					}
+				//if((*accIt1)->isMultiThreaded && (*(accIt2))->isMultiThreaded){
+				//					/// if the accessed values are local and, it they are not modified, there is no race
+				//					if(localValueInfo){
+				//						LocalIdentifier::LocalValueInfo::iterator localValIt;
+				//						localValIt = localValueInfo->find(valIt->first);
+				//						if(localValIt != localValueInfo->end()){
+				//							if(!localValIt->second){
+				//								/// TODO: Here we ignore some definitely local accesses
+				//								continue;
+				//							}
+				//						}
+				//					}
 
-					string loc1 = getLocation((*accIt1)->instruction);
-					string loc2 = getLocation((*accIt2)->instruction);
+				string loc1 = getLocation((*accIt1)->instruction);
+				string loc2 = getLocation((*accIt2)->instruction);
 #ifdef DETAILED_DEBUG
-					cerr << "Accesses: " << endl;
-					cerr << " " << loc1 << ": "
-							<< loadOrStore((*accIt1)->isStore) << endl;
-					cerr << " " << loc2 << ": "
-							<< loadOrStore((*accIt2)->isStore) << endl << endl;
+				string loc1 = getLocation((*accIt1)->instruction);
+				string loc2 = getLocation((*accIt2)->instruction);
+				cerr << "Accesses: " << endl;
+				cerr << " " << loc1 << ": "
+						<< loadOrStore((*accIt1)->isStore) << endl;
+				cerr << " " << loc2 << ": "
+						<< loadOrStore((*accIt2)->isStore) << endl << endl;
 #endif
 
-					/// Otherwise check the locksets
-					if(!doLockSetsIntersect((*accIt1)->lockSet, (*(accIt2))->lockSet)){
+				/// Otherwise check the locksets
+				if(!doLockSetsIntersect((*accIt1)->lockSet, (*(accIt2))->lockSet)){
 
-						string key = valIt1->first->getName().str() + loc1 +
-								loadOrStore((*accIt1)->isStore) + valIt2->first->getName().str() + loc2 + loadOrStore((*accIt2)->isStore);
-						string inverseKey = valIt2->first->getName().str() + loc2 +
-								loadOrStore((*accIt2)->isStore) + valIt1->first->getName().str() + loc1 + loadOrStore((*accIt1)->isStore);
-						//cerr << "befor cacke checking "  << key << "--" << inverseKey << endl;
-						if(raceCache.find(key) == raceCache.end() && raceCache.find(inverseKey) == raceCache.end()){
-							//cerr << " not in cache" << endl;
-							// Filter races from the standart libraries
-							//if(notFiltered(valIt1->first->getName().str()) && notFiltered(valIt2->first->getName().str())){
-								if(notFiltered(key)){
-									cerr << " yohoo" << raceCount << endl;
-									raceCache.insert(key);
-									instrumentCache.push_back(make_pair((*accIt1)->instruction, (*accIt2)->instruction));
+					string key = valIt1->first->getName().str() + loc1 +
+							loadOrStore((*accIt1)->isStore) + valIt2->first->getName().str() + loc2 + loadOrStore((*accIt2)->isStore);
+//					string inverseKey = valIt2->first->getName().str() + loc2 +
+//							loadOrStore((*accIt2)->isStore) + valIt1->first->getName().str() + loc1 + loadOrStore((*accIt1)->isStore);
+					//cerr << "befor cacke checking "  << key << "--" << inverseKey << endl;
+					if (ca.find(make_pair((*accIt1)->instruction, (*accIt2)->instruction)) == ca.end()){
+						//if(raceCache.find(key) == raceCache.end() && raceCache.find(inverseKey) == raceCache.end()){
+						//cerr << " not in cache" << endl;
+						// Filter races from the standart libraries
+						//if(notFiltered(valIt1->first->getName().str()) && notFiltered(valIt2->first->getName().str())){
+						//if(notFiltered(key)){
+							cerr << " yohoo" << raceCount << endl;
+							raceCache.insert(key);
+							ca.insert((make_pair((*accIt1)->instruction, (*accIt2)->instruction)));
+							ca.insert((make_pair((*accIt2)->instruction, (*accIt1)->instruction)));
+							instrumentCache.push_back(make_pair((*accIt1)->instruction, (*accIt2)->instruction));
 
-
-									/*
+							/*
 	                      llvm::errs() << "inst: " << *((*accIt1)->instruction);
 	                      cerr << endl;
 	                      llvm::errs() << "inst: " << *((*accIt2)->instruction);
 	                      cerr << endl;
-									 */
-									/*
+							 */
+							/*
 	                    cerr << "Potential race \'" << raceCount << "\' on variable: \""
 	                         << valIt->first->getName().str() << "\" at:" << endl;
 	                    cerr << " " << loc1 << ": " << loadOrStore((*accIt1)->isStore) << endl;
 	                    cerr << " " << loc2 << ": " << loadOrStore((*accIt2)->isStore) << endl << endl;
-									 */
-									printValuePair("Potential race", true, valIt1->first, valIt2->first, NULL, file);
-//									file << "Potential race \'" << raceCount << "\' on variable: \""
-//											<< valIt1->first->getName().str() << "\" and \"" << valIt2->first->getName().str()
-//											<< "\" at:" << endl;
+							 */
+							//printValuePair("Potential race", true, valIt1->first, valIt2->first, NULL, file);
+									file << "Potential race \'" << raceCount << "\' on variable: \""
+											<< valIt1->first->getName().str() << "\" and \"" << valIt2->first->getName().str()
+											<< "\" at:" << "\n";
 									file << " " << loc1 << ": " << loadOrStore((*accIt1)->isStore) << "\n";
 									if (ReportLLVMInstruction){
 										file << "   " << *((*accIt1)->instruction) << "\n";
@@ -678,18 +684,18 @@ void Strator::investigateAccesses(Strator::StratorWorker::ValueToAccessTypeMap::
 									if (ReportLLVMInstruction){
 										file << "   " << *((*accIt2)->instruction) << "\n";
 									}
-									++raceCount;
-								}
-							//}
-						}
+							++raceCount;
+							//return;
+						//}
 					}
+					//}
 				}
 			}
 		}
 	}
-
-
 }
+
+
 
 void Strator::reportLevel1Races(){
 	/// use the following for debugging
@@ -734,6 +740,7 @@ void Strator::reportLevel1Races(){
 		if(valIt->second.size() == 1){
 			continue;
 		}
+		errs() << "size of access record list is" << valIt->second.size() << "\n";
 
 		investigateAccesses(valIt, valIt, file, raceCount);
 
@@ -741,6 +748,7 @@ void Strator::reportLevel1Races(){
 
 
 	if (UseAliasAnalysis){
+		errs() << "races with aa\n";
 		assert(aa && "Alias analysis results not gathered");
 		Strator::StratorWorker::ValueToAccessTypeMap::iterator valIt2;
 		for(valIt = finalValueToAccessTypeMap.begin(); valIt != finalValueToAccessTypeMap.end(); ++valIt)
@@ -768,7 +776,7 @@ void Strator::mergeValueToAccessTypeMaps(){
 				finalValueToAccessTypeMap[valIt->first] = valIt->second;
 			} else {
 				/// The item is in, therefore we should append the accesses to the
-				finalValueToAccessTypeMap[valIt->first].insert(finalValueToAccessTypeMap[valIt->first].end(),
+				finalValueToAccessTypeMap[valIt->first].insert(/*finalValueToAccessTypeMap[valIt->first].end(),*/
 						valIt->second.begin(), valIt->second.end());
 			}
 		}
@@ -1033,6 +1041,7 @@ Strator::StratorWorker::StratorFunction* Strator::StratorWorker::getStratorFunct
 }
 
 string Strator::getLocation(const Instruction* inst){
+
 	MDNode *node = inst->getMetadata("dbg");
 	DILocation loc(node);
 	unsigned line = loc.getLineNumber();
@@ -1092,7 +1101,7 @@ void Strator::StratorWorker::printValueToAccessTypeMap(){
 		if(valIt->second.size() == 1)
 			continue;
 		cerr << "Access to: " << valIt->first->getName().str() << endl;
-		std::vector<Strator::StratorWorker::AccessType*>::iterator accIt;
+		std::/*vector*/set<Strator::StratorWorker::AccessType*>::iterator accIt;
 		for(accIt = valIt->second.begin(); accIt != valIt->second.end(); ++accIt){
 			if((*accIt)->isStore)
 				cerr << " STORE" << endl;

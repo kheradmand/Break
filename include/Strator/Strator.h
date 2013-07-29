@@ -143,11 +143,25 @@ namespace llvm{
         bool isMultiThreaded;
         const Instruction* instruction;
         LockSet lockSet;
+        bool operator<(const AccessType& at){
+        	if ((int)isStore < (int)at.isStore)
+        		return true;
+        	if (instruction < at.instruction)
+        		return true;
+//        	if (lockSet.size() < at.lockSet.size())
+//        		return true;
+        	return lockSet < at.lockSet;
+//        	LockSet::iterator it1,it2;
+//        	for (it1 = lockSet.begin(), it2 = at.lockSet.begin(); it1 != lockSet.end(); it1++, it2++)
+//        		if (*it1 < *it2)
+//        			return true;
+//        	return false;
+        }
       };              
       
       /// we need to map all accessed values to a vector of accesstypes
-      typedef std::map<Value*, std::vector<AccessType*> > ValueToAccessTypeMap;
-      
+      //typedef std::map<Value*, std::vector<AccessType*> > ValueToAccessTypeMap;
+      typedef std::map<Value*, std::set<AccessType*> > ValueToAccessTypeMap;
       /// Map of LLVM instructions to their Strator wrappers
       typedef std::map<const Instruction*, StratorStatement*> StratorStatementMap;
       
@@ -305,5 +319,6 @@ namespace llvm{
     RaceCache raceCache;
     ///
     InstrumentCache instrumentCache;
+    std::set<std::pair<const Instruction*, const Instruction*> > ca;
   };  
 }
