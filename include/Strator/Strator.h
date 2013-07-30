@@ -30,7 +30,8 @@ namespace llvm{
   class Strator : public ModulePass {
   public:
     /// Strator Types
-    typedef std::set<std::string> RaceCache;
+    //typedef std::set<std::string> RaceCache;
+	typedef std::set<std::pair<const Instruction*, const Instruction*> > RaceCache;
     typedef std::vector<std::pair<const Instruction*, const Instruction*> > InstrumentCache;
     typedef std::map<std::string, bool> FunctionMap;
 
@@ -319,6 +320,5 @@ namespace llvm{
     RaceCache raceCache;
     ///
     InstrumentCache instrumentCache;
-    std::set<std::pair<const Instruction*, const Instruction*> > ca;
   };  
 }

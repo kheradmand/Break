@@ -647,7 +647,7 @@ void Strator::investigateAccesses(Strator::StratorWorker::ValueToAccessTypeMap::
 //					string inverseKey = valIt2->first->getName().str() + loc2 +
 //							loadOrStore((*accIt2)->isStore) + valIt1->first->getName().str() + loc1 + loadOrStore((*accIt1)->isStore);
 					//cerr << "befor cacke checking "  << key << "--" << inverseKey << endl;
-					if (ca.find(make_pair((*accIt1)->instruction, (*accIt2)->instruction)) == ca.end()){
+					if (raceCache.find(make_pair((*accIt1)->instruction, (*accIt2)->instruction)) == raceCache.end()){
 #ifndef DETAILED_DEBUG
 						string loc1 = getLocation((*accIt1)->instruction);
 						string loc2 = getLocation((*accIt2)->instruction);
@@ -659,8 +659,8 @@ void Strator::investigateAccesses(Strator::StratorWorker::ValueToAccessTypeMap::
 						//if(notFiltered(key)){
 							cerr << " yohoo" << raceCount << endl;
 							//raceCache.insert(key);
-							ca.insert((make_pair((*accIt1)->instruction, (*accIt2)->instruction)));
-							ca.insert((make_pair((*accIt2)->instruction, (*accIt1)->instruction)));
+							raceCache.insert((make_pair((*accIt1)->instruction, (*accIt2)->instruction)));
+							raceCache.insert((make_pair((*accIt2)->instruction, (*accIt1)->instruction)));
 							instrumentCache.push_back(make_pair((*accIt1)->instruction, (*accIt2)->instruction));
 
 							/*
