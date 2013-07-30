@@ -246,9 +246,9 @@ bool Strator::runOnModule(Module &m) {
 }
 
 set<Strator::StratorWorker::LockSet>& Strator::StratorWorker::traverseFunction(const Function& f, LockSet lockSet){
-	//#ifdef DETAILED_DEBUG
+	#ifdef DETAILED_DEBUG
 	cerr << " Traversing: " << f.getName().str() << endl;
-	//#endif
+	#endif
 	if("signal_threads" == f.getName().str())
 		cerr << "signal" << endl;
 	/// This should be OK even if not thread safe
@@ -502,7 +502,6 @@ void Strator::StratorWorker::detectRaces(const Instruction& inst, bool isStore, 
 	Instruction* defInst = const_cast<Instruction*>(&inst);
 	Value* operand = NULL;
 
-	cerr << "here!" << endl;
 
 	if(isStore){
 		assert(inst.getNumOperands() == 2 && "Store should have 2 operands");
@@ -628,8 +627,7 @@ void Strator::investigateAccesses(Strator::StratorWorker::ValueToAccessTypeMap::
 				//						}
 				//					}
 
-				string loc1 = getLocation((*accIt1)->instruction);
-				string loc2 = getLocation((*accIt2)->instruction);
+
 #ifdef DETAILED_DEBUG
 				string loc1 = getLocation((*accIt1)->instruction);
 				string loc2 = getLocation((*accIt2)->instruction);
@@ -643,19 +641,24 @@ void Strator::investigateAccesses(Strator::StratorWorker::ValueToAccessTypeMap::
 				/// Otherwise check the locksets
 				if(!doLockSetsIntersect((*accIt1)->lockSet, (*(accIt2))->lockSet)){
 
-					string key = valIt1->first->getName().str() + loc1 +
-							loadOrStore((*accIt1)->isStore) + valIt2->first->getName().str() + loc2 + loadOrStore((*accIt2)->isStore);
+
+					//string key = valIt1->first->getName().str() + loc1 +
+					//		loadOrStore((*accIt1)->isStore) + valIt2->first->getName().str() + loc2 + loadOrStore((*accIt2)->isStore);
 //					string inverseKey = valIt2->first->getName().str() + loc2 +
 //							loadOrStore((*accIt2)->isStore) + valIt1->first->getName().str() + loc1 + loadOrStore((*accIt1)->isStore);
 					//cerr << "befor cacke checking "  << key << "--" << inverseKey << endl;
 					if (ca.find(make_pair((*accIt1)->instruction, (*accIt2)->instruction)) == ca.end()){
+#ifndef DETAILED_DEBUG
+						string loc1 = getLocation((*accIt1)->instruction);
+						string loc2 = getLocation((*accIt2)->instruction);
+#endif
 						//if(raceCache.find(key) == raceCache.end() && raceCache.find(inverseKey) == raceCache.end()){
 						//cerr << " not in cache" << endl;
 						// Filter races from the standart libraries
 						//if(notFiltered(valIt1->first->getName().str()) && notFiltered(valIt2->first->getName().str())){
 						//if(notFiltered(key)){
 							cerr << " yohoo" << raceCount << endl;
-							raceCache.insert(key);
+							//raceCache.insert(key);
 							ca.insert((make_pair((*accIt1)->instruction, (*accIt2)->instruction)));
 							ca.insert((make_pair((*accIt2)->instruction, (*accIt1)->instruction)));
 							instrumentCache.push_back(make_pair((*accIt1)->instruction, (*accIt2)->instruction));
@@ -740,7 +743,7 @@ void Strator::reportLevel1Races(){
 		if(valIt->second.size() == 1){
 			continue;
 		}
-		errs() << "size of access record list is" << valIt->second.size() << "\n";
+		errs() << valIt->first->getName() << "size of access record list is" << valIt->second.size() << "\n";
 
 		investigateAccesses(valIt, valIt, file, raceCount);
 
@@ -1040,16 +1043,19 @@ Strator::StratorWorker::StratorFunction* Strator::StratorWorker::getStratorFunct
 	return stratorFunctionMap[f];
 }
 
-string Strator::getLocation(const Instruction* inst){
 
-	MDNode *node = inst->getMetadata("dbg");
+string Strator::getLocation(const Instruction* inst){
+	MDNode *node = inst->getDebugLoc().getAsMDNode(inst->getContext());
 	DILocation loc(node);
+
 	unsigned line = loc.getLineNumber();
 	StringRef file = loc.getFilename();
+
 	stringstream locStream;
 	locStream << line;
 	string locStr = locStream.str();
 	string location(file.str() + ": l." + locStr);
+//	string location(file.str() + ": l." + itos(line));
 
 	return location;
 }
@@ -1085,7 +1091,7 @@ bool Strator::getTask(Function** f) {
 
 /// Helpers
 void Strator::StratorWorker::printLocation(const Instruction& inst){
-	MDNode *node = inst.getMetadata("dbg");
+	MDNode *node = inst.getDebugLoc().getAsMDNode(inst.getContext());
 	DILocation loc(node);
 	unsigned line = loc.getLineNumber();
 	StringRef file = loc.getFilename();
