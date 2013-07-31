@@ -523,39 +523,6 @@ public:
 		DEBUG(PrintPointsToGraph());
 
 
-		// DELETE IT OR YOU WILL DIE RIGHT NOW =========================================
-#undef DEBUG_TYPE
-#define DEBUG_TYPE "havij"
-		for (unsigned i = 0, e = GraphNodes.size(); i != e; ++i) {
-			const Node *N = &GraphNodes[i];
-			if (N->Val){
-			errs() << ":::::"; WriteAsOperand(errs(), N->Val, true, NULL); errs() << "\n";}
-			if (FindNode(i) != i) {
-				PrintNode(N);
-				errs() << "\t--> same as ";
-				PrintNode(&GraphNodes[FindNode(i)]);
-				errs() << "\n";
-			} else {
-				errs() << "[" << (N->PointsTo->count()) << "] ";
-				PrintNode(N);
-				errs() << "\t--> ";
-
-				bool first = true;
-				for (SparseBitVector<>::iterator bi = N->PointsTo->begin();
-						bi != N->PointsTo->end();
-						++bi) {
-					if (!first)
-						errs() << ", ";
-					PrintNode(&GraphNodes[*bi]);
-					first = false;
-				}
-				errs() << "\n";
-			}
-		}
-#undef DEBUG_TYPE
-#define DEBUG_TYPE "anders-aa"
-		// DELETE IT OR YOU WILL DIE RIGHT NOW =========================================
-
 		// Free the constraints list, as we don't need it to respond to alias
 		// requests.
 		std::vector<Constraint>().swap(Constraints);
@@ -692,7 +659,6 @@ private:
 
 
 	void PrintNode(const Node *N) const;
-	std::string something(const Node *N) const;
 	void PrintConstraints() const ;
 	void PrintConstraint(const Constraint &) const;
 	void PrintLabels() const;
@@ -3202,75 +3168,7 @@ unsigned Andersens::FindNode(unsigned NodeIndex) const {
 //===----------------------------------------------------------------------===//
 //                               Debugging Output
 //===----------------------------------------------------------------------===//
-std::string Andersens::something(const Node *N) const {
-	std::string khar;
-	raw_string_ostream x(khar);
-	if (N == &GraphNodes[UniversalSet]) {
-		x << "<universal>";
-		return x.str();
-	} else if (N == &GraphNodes[NullPtr]) {
-		x << "<nullptr>";
-		return x.str();
-	} else if (N == &GraphNodes[NullObject]) {
-		x << "<null>";
-		return x.str();
-	} else if (N == &GraphNodes[IntNode]) {
-		x << "<int>";
-		return x.str();
-	} else if (N == &GraphNodes[AggregateNode]) {
-		x << "<aggregate>";
-		return x.str();
-	} else if (N == &GraphNodes[PthreadSpecificNode]) {
-		x << "<pthread_specific>";
-		return x.str();
-	}
-	if (!N->getValue()) {
-		x << "artificial" << (intptr_t) N;
-		return x.str();
-	}
 
-	assert(N->getValue() != 0 && "Never set node label!");
-
-	Value *V = N->getValue();
-	if (ObjectNodes.find(V) != ObjectNodes.end() && N == &GraphNodes[getObject(V)])
-		x << "O" << getObject(N->getValue()) << " ";
-	else if (Function *F = dyn_cast<Function>(V)) {
-		if (isa<PointerType>(F->getFunctionType()->getReturnType()) && N == &GraphNodes[getReturnNode(F)]) {
-			x << "R" << getReturnNode(F) << " ";
-		} else if (F->getFunctionType()->isVarArg() && N == &GraphNodes[getVarargNode(F)]) {
-			x << "V" << getVarargNode(F) << " ";
-		} else x << "F" << getNode(V) << " ";
-	} else
-		x << "V" << getNode(V) << " ";
-
-	if (Function *F = dyn_cast<Function>(V)) {
-		if (isa<PointerType>(F->getFunctionType()->getReturnType()) &&
-				N == &GraphNodes[getReturnNode(F)]) {
-			x << F->getName() << ":retval";
-			return x.str();
-		} else if (F->getFunctionType()->isVarArg() &&
-				N == &GraphNodes[getVarargNode(F)]) {
-			x << F->getName() << ":vararg";
-			return x.str();
-		}
-	}
-
-	if (Instruction *I = dyn_cast<Instruction>(V))
-		x << I->getParent()->getParent()->getName() << ":";
-	else if (Argument *Arg = dyn_cast<Argument>(V))
-		x << Arg->getParent()->getName() << ":";
-
-	if (V->hasName())
-		x << V->getName();
-	else
-		//    x << "(unnamed)";
-		x << "(" << *V << ")";
-
-	if (isa<GlobalValue>(V) || isa<AllocaInst>(V) || isMallocCall(V))
-		if (N == &GraphNodes[getObject(V)])
-			x << "<mem>";
-	return x.str();
-}
 void Andersens::PrintNode(const Node *N) const {
 	if (N == &GraphNodes[UniversalSet]) {
 		errs() << "<universal>";
