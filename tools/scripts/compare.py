@@ -3,6 +3,7 @@ from operator import itemgetter
 
 
 def addrace(race, ret):
+    print race.groups()
     ret.append((int(race.group('line1')),race.group('var1'),int(race.group('line2')),race.group('var2')))
 
 def parseRacer():
@@ -65,6 +66,7 @@ print "computing difference"
 setRacer = set([(x[0],x[2]) for x in raceRacer])
 setRelay = set([(x[0],x[2]) for x in raceRelay])
 setDiff = setRelay - setRacer
+setDiff = setDiff - set((x[1],x[0]) for x in setRacer)
 diff = []
 for it in setDiff:
     #print #'{0:5d} {1:5d}'.format(it[0],it[1])
