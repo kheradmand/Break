@@ -1288,6 +1288,7 @@ void Andersens::CollectConstraints(Module &M) {
 				ObjectIndex));
 
 		if (I->hasDefinitiveInitializer()) {
+			errs() << I->getName() << " has definitive \n";
 			AddGlobalInitializerConstraints(ObjectIndex, I->getInitializer());
 			if (isa<PointerType>(I->getType()))
 				AddConstraintForConstantPointer(I);

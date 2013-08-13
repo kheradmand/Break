@@ -50,7 +50,7 @@
 #include "Strator/Strator.h"
 
 /// Uncomment this for verbose debugging
-//#define DETAILED_DEBUG
+#define DETAILED_DEBUG
 
 using namespace llvm;
 using namespace std;
@@ -306,7 +306,8 @@ set<Strator::StratorWorker::LockSet>& Strator::StratorWorker::traverseStatement(
 //	cerr << "@: ";
 //	llvm::errs() << *inst;
 //	cerr << endl;
-	//printMultithreaded();
+	//if (f.getName() == "queueDelete")
+	//	printMultithreaded();
 	if(stratorStatementMap.find(&(*inst)) == stratorStatementMap.end()){
 		stratorStatementMap[&(*inst)] = new StratorStatement();
 	}
@@ -334,6 +335,13 @@ set<Strator::StratorWorker::LockSet>& Strator::StratorWorker::traverseStatement(
 		set<Strator::StratorWorker::LockSet>* returnSet = new set<Strator::StratorWorker::LockSet>();
 		returnSet->insert(lockSet);
 		return *returnSet;
+	}
+
+	if(inst->getOpcode() == Instruction::BitCast){
+		cerr << "at bitcast\n";
+		inst->getOperand(0)->dump();
+		inst->getOperand(1)->dump();
+		parentValue[&*inst] = inst->getOperand(0);
 	}
 
 	vector<LockSet>* workingList = new vector<StratorWorker::LockSet>();
@@ -410,6 +418,16 @@ set<Strator::StratorWorker::LockSet>& Strator::StratorWorker::traverseStatement(
 					multithreadedFunctionMap[calledFunc->getName().str()] = true;
 				}
 
+				/// We pass some values to the called function, updating flow sensitive value map
+				CallSite cs(const_cast<CallInst*>(callInst));
+				Function::arg_iterator calleeIt;
+				CallSite::arg_iterator callerIt;
+				for (callerIt = cs.arg_begin(), calleeIt = calledFunc->arg_begin();
+						callerIt != cs.arg_end() && calleeIt != calledFunc->arg_end();
+						callerIt++, calleeIt++){
+					parentValue[calleeIt] = callerIt->get();
+				}
+
 				set<StratorWorker::LockSet>& functionLockSets = traverseFunction(*calledFunc, lockSet);
 				/// Maybe the called function was multi threaded: If so, the caller becomes multi
 				/// threaded from this point on if the following two lines are uncommented.
@@ -418,6 +436,11 @@ set<Strator::StratorWorker::LockSet>& Strator::StratorWorker::traverseStatement(
           if(multithreadedFunctionMap[calledFunc->getName().str()])
           multithreadedFunctionMap[f.getName().str()] = true;
 				 */
+				/// arguments of callee are no longer valid, updating flow sensitive value map
+				for (calleeIt = calledFunc->arg_begin(); calleeIt != calledFunc->arg_end(); calleeIt++){
+					parentValue.erase(calleeIt);
+				}
+
 				workingList->insert(workingList->begin(), functionLockSets.begin(), functionLockSets.end());
 			}
 		} else {
@@ -505,10 +528,12 @@ void Strator::StratorWorker::detectRaces(const Instruction& inst, bool isStore, 
 
 	if(isStore){
 		assert(inst.getNumOperands() == 2 && "Store should have 2 operands");
-		operand = parent->getDefOperand(defInst, defInst->getOperand(1));
+		//operand = parent->getDefOperand(defInst, defInst->getOperand(1));
+		operand = parent->getDefOperand(defInst->getOperand(1), parentValue);
 	} else{
 		assert(inst.getNumOperands() == 1 && "Load should have 1 operand");
-		operand = parent->getDefOperand(defInst, defInst->getOperand(0));
+		//operand = parent->getDefOperand(defInst, defInst->getOperand(0));
+		operand = parent->getDefOperand(defInst->getOperand(0), parentValue);
 	}
 
 	if(operand){
@@ -517,7 +542,19 @@ void Strator::StratorWorker::detectRaces(const Instruction& inst, bool isStore, 
 			if( ((GlobalVariable*)(operand))->isConstant())
 				return;
 		}
-
+		if (parent->getLocation(&inst) == "pbzip2.c: l.673"){
+			cerr << "Recording access in function: " << fName << " mt: " << multithreadedFunctionMap[fName] << endl;
+			cerr << "location:" << parent->getLocation(&inst) << endl;
+			cerr << "Variable: " << operand->getName().str() << endl;
+			cerr << "And instruction: ";
+			llvm::errs() << inst;
+			cerr << endl;
+			cerr << "Lockset:" << endl;
+			Strator::StratorWorker::LockSet::iterator it;
+			for(it = lockSet.begin(); it != lockSet.end(); ++it){
+				cerr << "   lock: " << *it << endl;
+			}
+		}
 #ifdef DETAILED_DEBUG
 		cerr << "Recording access in function: " << fName << " mt: " << multithreadedFunctionMap[fName] << endl;
 		cerr << "location:" << parent->getLocation(&inst) << endl;
@@ -626,7 +663,6 @@ void Strator::investigateAccesses(Strator::StratorWorker::ValueToAccessTypeMap::
 				//							}
 				//						}
 				//					}
-
 
 #ifdef DETAILED_DEBUG
 				string loc1 = getLocation((*accIt1)->instruction);
@@ -755,9 +791,24 @@ void Strator::reportLevel1Races(){
 		assert(aa && "Alias analysis results not gathered");
 		Strator::StratorWorker::ValueToAccessTypeMap::iterator valIt2;
 		for(valIt = finalValueToAccessTypeMap.begin(); valIt != finalValueToAccessTypeMap.end(); ++valIt)
-			for(valIt2 = finalValueToAccessTypeMap.begin(); valIt2 != valIt; ++valIt2)
-				if(aa->alias(valIt->first, valIt2->first))
+			for(valIt2 = finalValueToAccessTypeMap.begin(); valIt2 != valIt; ++valIt2){
+				bool temp = 0;
+				if (!valIt->second.empty() && !valIt2->second.empty()){
+					std::/*vector*/set<Strator::StratorWorker::AccessType*>::iterator accIt1, accIt2;
+					accIt1 = valIt->second.begin();
+					accIt2 = valIt2->second.begin();
+					if ((getLocation((*accIt1)->instruction) == "pbzip2.c: l.673" && getLocation((*accIt2)->instruction) == "pbzip2.c: l.665")||
+											(getLocation((*accIt2)->instruction) == "pbzip2.c: l.673" && getLocation((*accIt1)->instruction) == "pbzip2.c: l.665")){
+						cerr << "here they are \n";
+						temp = 1;
+					}
+				}
+				if(aa->alias(valIt->first, valIt2->first)){
+					if (temp)
+						cerr << "they alias  \\:D/\n";
 					investigateAccesses(valIt, valIt2, file, raceCount);
+				}
+			}
 	}
 
 	file.close();
@@ -821,13 +872,15 @@ Value* Strator::StratorWorker::getLockValue(const Instruction* inst){
 			case 1: {
 				if(isa<Instruction>(inst->getOperand(0))){
 					Instruction* defInst = dyn_cast<Instruction>(CI->getArgOperand(0));
-					operand = parent->getDefOperand(defInst,
-							defInst->getOperand(0));
+//					operand = parent->getDefOperand(defInst,
+//							defInst->getOperand(0));
+					operand = parent->getDefOperand(defInst->getOperand(0), parentValue);
 				} else if(isa<GlobalVariable>(CI->getArgOperand(0))){
 					operand = CI->getArgOperand(0);
 				} else if(isa<GEPOperator>(CI->getArgOperand(0))){
-					operand = parent->getDefOperand(const_cast<Instruction*>(inst),
-							CI->getArgOperand(0));
+//					operand = parent->getDefOperand(const_cast<Instruction*>(inst),
+//							CI->getArgOperand(0));
+					operand = parent->getDefOperand(CI->getArgOperand(0), parentValue);
 				}else{
 					//It may be just local value, what's the problem ?
 					operand = CI->getArgOperand(0);
@@ -918,7 +971,7 @@ bool Strator::doLockSetsIntersect(Strator::StratorWorker::LockSet& ls1,
 	}
 #ifdef DETAILED_DEBUG
 	cerr << endl;
-	cerr << "returning " << retVal << endl;
+	cerr << "locksets intersect? " << (retVal?"yep":"nope") << endl;
 #endif
 	return retVal;
 }
@@ -967,10 +1020,38 @@ inline string Strator::loadOrStore(bool isStore){
 		return "LOAD";
 }
 
-Value* Strator::getDefOperand(Instruction* defInst, Value* operand){  
+//Value* Strator::getDefOperand(Instruction* defInst, Value* operand){
+Value* Strator::getDefOperand(Value* operand, FlowSensitiveValue& parentValue){
 	/// TODO: try to move this mutex solely to GEPFactory methods, the rest is pretty much
 	/// immutable
-	return operand;
+
+
+	pthread_mutex_lock(&operationMutex);
+	Value* retVal = operand;
+	set<Value*> visited;
+	visited.insert(retVal);
+	while (parentValue.find(retVal) != parentValue.end()
+			&& visited.find(parentValue[retVal]) == visited.end()){
+		retVal = parentValue[retVal];
+		visited.insert(retVal);
+	}
+
+	if(isa<GEPOperator>(retVal)){
+		GEPOperator* ptr = dyn_cast<GEPOperator>(retVal);
+
+		std::vector<int> indices;
+		if(ptr->hasAllConstantIndices()){
+			for (User::op_iterator it = ptr->idx_begin(), ie = ptr->idx_end(); it != ie; ++it){
+				ConstantInt *idx = cast<ConstantInt>(*it);
+				indices.push_back(idx->getZExtValue());
+			}
+		}
+		if(ptr->getPointerOperand()->hasName())
+			retVal = GEPFactory->getGEPWrapperValue(ptr->getPointerOperand(), indices);
+	}
+
+	return retVal;
+
 //	pthread_mutex_lock(&operationMutex);
 //	cerr << " at getDefOperand " << operand->hasName() << endl;
 //	if (operand->hasName())

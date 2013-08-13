@@ -34,6 +34,10 @@ namespace llvm{
 	typedef std::set<std::pair<const Instruction*, const Instruction*> > RaceCache;
     typedef std::vector<std::pair<const Instruction*, const Instruction*> > InstrumentCache;
     typedef std::map<std::string, bool> FunctionMap;
+    /// TODO: make it value* -> vector(value*) since there is possibility to have same function in
+    /// call chain with different locksets
+    typedef std::map<const Value*, Value*> FlowSensitiveValue;
+
 
     /// Strator Methods
     void printLocalModificationInfo();
@@ -52,8 +56,10 @@ namespace llvm{
     void reportLevel1Races();    
     void mergeValueToAccessTypeMaps();
     inline std::string loadOrStore(bool);
-    Value* getDefOperand(Instruction* defInst, 
-                         Value* operand);
+//    Value* getDefOperand(Instruction* defInst,
+//                         Value* operand);
+    Value* getDefOperand(Value* operand,
+    		FlowSensitiveValue& parentValue);
     bool notFiltered(std::string str);
 
     std::string getLocation(const Instruction* inst);      
@@ -178,6 +184,7 @@ namespace llvm{
         pthread_mutex_init (&operationMutex, 0);
       }
       std::set<LockSet>& traverseFunction(const Function& f, LockSet lockSet);
+      std::set<LockSet>& traverseFunctionHelper(const Function& f, LockSet lockSet);
       std::set<LockSet>& traverseStatement(const Function& f, const BasicBlock::const_iterator& instIter, 
                                            const LockSet& entryLockSet, LockSet lockSet);    
       /// For every value, we keep track of all accesses to that value
@@ -195,6 +202,8 @@ namespace llvm{
       StratorStatementMap stratorStatementMap;    
       /// TODO: Is it more correct to have this shared rather thatn per-worker?
       MultithreadedFunctionMap multithreadedFunctionMap;                
+      ///
+      FlowSensitiveValue parentValue;
       ///
       std::set<const Value*> multithreadedAPISet;
       /// This method has the names of lock statements cached. One needs to
