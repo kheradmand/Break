@@ -22,6 +22,7 @@
 #include "llvm/Support/circular_raw_ostream.h"
 #include "llvm/Support/CommandLine.h"
 #include "llvm/Support/CFG.h"
+#include "llvm/Support/Debug.h"
 #include "llvm/PassManager.h"
 
 #include "llvm/Assembly/Writer.h"
@@ -39,6 +40,7 @@
 #include "llvm/Support/circular_raw_ostream.h"
 #include "llvm/Support/CommandLine.h"
 #include "llvm/Support/CFG.h"
+#include "llvm/Support/Debug.h"
 #include "llvm/PassManager.h"
 
 #include "llvm/Assembly/Writer.h"
@@ -110,7 +112,16 @@ cl::opt<unsigned>
 UpwardPropagationLevel("prop-level",
 		cl::desc("This is to propagate multithreaded context information."),
 		cl::init(0));
+
+cl::opt<bool>
+UseParentValue("use-parval",
+		cl::desc("This is to use value a value depends on instead of the value itself (default=true)"),
+		cl::init(true));
+
+
 }
+
+
 
 void Strator::getAnalysisUsage(AnalysisUsage& au) const {
 //	if(UseLocalValueInfo || DebugAliasAnalysis)
@@ -337,10 +348,10 @@ set<Strator::StratorWorker::LockSet>& Strator::StratorWorker::traverseStatement(
 		return *returnSet;
 	}
 
+#undef DEBUG_TYPE
+#define DEBUG_TYPE "strator-parval"
 	if(inst->getOpcode() == Instruction::BitCast){
-		cerr << "at bitcast\n";
-		inst->getOperand(0)->dump();
-		inst->getOperand(1)->dump();
+		DEBUG(errs() << *inst << " = " << *inst->getOperand(0) << "\n");
 		parentValue[&*inst] = inst->getOperand(0);
 	}
 
@@ -404,11 +415,13 @@ set<Strator::StratorWorker::LockSet>& Strator::StratorWorker::traverseStatement(
 				if(l)
 					lockSet.erase(l);
 			} else{
+				bool atThreadCreationFunction = false;
 				/// Now check if we have a resolved call, that is a direct function call
 				/// We have a resolved function call
 				if(isThreadCreationFunction(calledFunc->getName().str())) {
 					/// If the created function is a thread creation function we
 					/// need to find the worker function operand and traverse it
+					atThreadCreationFunction = true;
 					calledFunc = getThreadWorkerFunction(callInst);
 				}
 
@@ -418,15 +431,27 @@ set<Strator::StratorWorker::LockSet>& Strator::StratorWorker::traverseStatement(
 					multithreadedFunctionMap[calledFunc->getName().str()] = true;
 				}
 
+#undef DEBUG_TYPE
+#define DEBUG_TYPE "strator-parval"
 				/// We pass some values to the called function, updating flow sensitive value map
 				CallSite cs(const_cast<CallInst*>(callInst));
 				Function::arg_iterator calleeIt;
 				CallSite::arg_iterator callerIt;
-				for (callerIt = cs.arg_begin(), calleeIt = calledFunc->arg_begin();
-						callerIt != cs.arg_end() && calleeIt != calledFunc->arg_end();
-						callerIt++, calleeIt++){
-					parentValue[calleeIt] = callerIt->get();
+				if(atThreadCreationFunction) {
+					/// this is only supported for pthread right now
+					assert(cs.arg_size() == 4 && "pthread_create should have 4 operands!");
+					assert(calledFunc->arg_size() == 1 && "pthread thread worker function should have 1 operand");
+					DEBUG(errs() << *calledFunc->arg_begin() << " = " <<  *cs.getArgument(3) << "\n");
+					parentValue[calledFunc->arg_begin()] = cs.getArgument(3);
+				}else{
+					for (callerIt = cs.arg_begin(), calleeIt = calledFunc->arg_begin();
+							callerIt != cs.arg_end() && calleeIt != calledFunc->arg_end();
+							callerIt++, calleeIt++){
+							DEBUG(errs() <<  *calleeIt << " = " << *(callerIt->get()) << "\n");
+							parentValue[calleeIt] = callerIt->get();
+					}
 				}
+
 
 				set<StratorWorker::LockSet>& functionLockSets = traverseFunction(*calledFunc, lockSet);
 				/// Maybe the called function was multi threaded: If so, the caller becomes multi
@@ -1024,17 +1049,31 @@ inline string Strator::loadOrStore(bool isStore){
 Value* Strator::getDefOperand(Value* operand, FlowSensitiveValue& parentValue){
 	/// TODO: try to move this mutex solely to GEPFactory methods, the rest is pretty much
 	/// immutable
+#undef DEBUG_TYPE
+#define DEBUG_TYPE "strator-parval"
 
+
+	if (!UseParentValue)
+		return operand;
 
 	pthread_mutex_lock(&operationMutex);
 	Value* retVal = operand;
 	set<Value*> visited;
-	visited.insert(retVal);
-	while (parentValue.find(retVal) != parentValue.end()
-			&& visited.find(parentValue[retVal]) == visited.end()){
-		retVal = parentValue[retVal];
+	while (visited.find(retVal) == visited.end()){
+		DEBUG(errs() << *retVal << " -> ");
 		visited.insert(retVal);
+
+		if (parentValue[retVal] &&
+				visited.find(parentValue[retVal]) == visited.end()){
+			retVal = parentValue[retVal];
+		}else if (isa<BitCastInst>(retVal)){
+			DEBUG(errs() << "it is bit cast instructuin " << *retVal << "\n");
+			BitCastInst* ptr = dyn_cast<BitCastInst>(retVal);
+			retVal = ptr->getOperand(0);
+		}
 	}
+	DEBUG(errs() << " <-\n");
+
 
 	if(isa<GEPOperator>(retVal)){
 		GEPOperator* ptr = dyn_cast<GEPOperator>(retVal);
@@ -1050,6 +1089,7 @@ Value* Strator::getDefOperand(Value* operand, FlowSensitiveValue& parentValue){
 			retVal = GEPFactory->getGEPWrapperValue(ptr->getPointerOperand(), indices);
 	}
 
+	pthread_mutex_unlock(&operationMutex);
 	return retVal;
 
 //	pthread_mutex_lock(&operationMutex);
