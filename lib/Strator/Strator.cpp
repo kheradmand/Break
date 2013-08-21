@@ -1066,28 +1066,29 @@ Value* Strator::getDefOperand(Value* operand, FlowSensitiveValue& parentValue){
 		if (parentValue[retVal] &&
 				visited.find(parentValue[retVal]) == visited.end()){
 			retVal = parentValue[retVal];
-		}else if (isa<BitCastInst>(retVal)){
-			DEBUG(errs() << "it is bit cast instructuin " << *retVal << "\n");
-			BitCastInst* ptr = dyn_cast<BitCastInst>(retVal);
-			retVal = ptr->getOperand(0);
+		}else if (ConstantExpr *ce = dyn_cast<ConstantExpr>(retVal)){
+			if (ce->isCast()){
+				retVal = ce->getOperand(0);
+			}
 		}
 	}
 	DEBUG(errs() << " <-\n");
 
-
-	if(isa<GEPOperator>(retVal)){
-		GEPOperator* ptr = dyn_cast<GEPOperator>(retVal);
-
-		std::vector<int> indices;
-		if(ptr->hasAllConstantIndices()){
-			for (User::op_iterator it = ptr->idx_begin(), ie = ptr->idx_end(); it != ie; ++it){
-				ConstantInt *idx = cast<ConstantInt>(*it);
-				indices.push_back(idx->getZExtValue());
-			}
-		}
-		if(ptr->getPointerOperand()->hasName())
-			retVal = GEPFactory->getGEPWrapperValue(ptr->getPointerOperand(), indices);
-	}
+	/// this will break alias analysis
+	/// TODO: but it i possible to track getelementptr to some extend
+//	if(isa<GEPOperator>(retVal)){
+//		GEPOperator* ptr = dyn_cast<GEPOperator>(retVal);
+//
+//		std::vector<int> indices;
+//		if(ptr->hasAllConstantIndices()){
+//			for (User::op_iterator it = ptr->idx_begin(), ie = ptr->idx_end(); it != ie; ++it){
+//				ConstantInt *idx = cast<ConstantInt>(*it);
+//				indices.push_back(idx->getZExtValue());
+//			}
+//		}
+//		if(ptr->getPointerOperand()->hasName())
+//			retVal = GEPFactory->getGEPWrapperValue(ptr->getPointerOperand(), indices);
+//	}
 
 	pthread_mutex_unlock(&operationMutex);
 	return retVal;
