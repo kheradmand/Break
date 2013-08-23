@@ -8,6 +8,7 @@
 #define INITIALIZE "_Z10initializev"
 #define BEFORE_LOCK "_Z10beforeLockP15pthread_mutex_ti"
 #define AFTER_LOCK "_Z9afterLockP15pthread_mutex_ti"
+#define BEFORE_UNLOCK "_Z12beforeUnlockP15pthread_mutex_ti"
 #define AFTER_UNLOCK "_Z11afterUnlockP15pthread_mutex_ti"
 #define FINALIZE "_Z8finalizev"
 
@@ -81,6 +82,7 @@ public:
 
 		Function* beforeLock = Function::Create(funcType, GlobalVariable::ExternalLinkage, BEFORE_LOCK, &m);
 		Function* afterLock = Function::Create(funcType, GlobalVariable::ExternalLinkage, AFTER_LOCK, &m);
+		Function* beforeUnlock = Function::Create(funcType, GlobalVariable::ExternalLinkage, BEFORE_UNLOCK, &m);
 		Function* afterUnlock = Function::Create(funcType, GlobalVariable::ExternalLinkage, AFTER_UNLOCK, &m);
 
 		Function* initialize = Function::Create(FunctionType::get(Type::getVoidTy(getGlobalContext()), false),
@@ -119,7 +121,10 @@ public:
 											Type::getInt32Ty(getGlobalContext()), getLocationIndex(inst))
 							};
 
+							CallInst* callBeforeUnlock = CallInst::Create(beforeUnlock, args);
 							CallInst* callAfterUnlock = CallInst::Create(afterUnlock, args);
+
+							callBeforeUnlock->insertBefore(inst);
 							callAfterUnlock->insertAfter(inst);
 
 						}

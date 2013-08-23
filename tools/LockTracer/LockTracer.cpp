@@ -11,20 +11,29 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <queue>
+#include <set>
 #include <cstdio>
 #include <assert.h>
 #include <stdint.h>
+#include <time.h>
 #include <fstream>
+#include <algorithm>
+#include <sys/time.h>
 using namespace std;
 
 
 namespace LockTracer{
 
+class Thread;
+
 typedef int32_t Location;
 typedef pthread_mutex_t* LockAddress;
 typedef pair< Location , LockAddress> LockOperation;
+typedef set<LockAddress> LockSet;
 
 pthread_mutex_t tracerBigLock;
+pthread_mutex_t pthreadOperationLock;
 
 ofstream log("trace.log");
 
@@ -32,6 +41,10 @@ typedef map< LockAddress, int> AdjList;
 map<LockAddress, AdjList> RAOG; //runtime address order graph
 
 map<Location, string> locationString;
+
+typedef map<LockAddress, Thread*> LockThreadMap;
+LockThreadMap lockThreadMap;
+LockSet locksHeld;
 
 class Thread{
 public:
@@ -63,7 +76,7 @@ public:
 			//add edge in runtime location order graph from all last locks to this lock
 			LockAddress to = lockAq.second;
 			for (typeof(locks.begin()) it = locks.begin(); it != locks.end(); it++){
-				LockAddress from = locks.back().second;
+				LockAddress from = it->second;
 				if (RAOG.find(from) == RAOG.end())
 					RAOG[from] = AdjList();
 				if (RAOG[from].find(to) == RAOG[from].end())
@@ -72,13 +85,27 @@ public:
 			}
 		}
 		locks.push_back(lockAq);
-		log << "thread " << getIndex() << " locked " << lockAq.second << " at " << locationString[lockAq.first] << endl;
+		assert(locksHeld.find(lockAq.second) == locksHeld.end() && "thread locked a mutex which was locked!\n");
+		lockThreadMap[lockAq.second] = this;
+		locksHeld.insert(lockAq.second);
+		log << "+ thread " << getIndex() << " locked " << lockAq.second << " at " << locationString[lockAq.first] << endl;
 
 	}
 
 	void unlock(const LockOperation &lockRel){
 		locks.pop_back();
-		log << "thread " << getIndex() << " unlocked " << lockRel.second << " at " << locationString[lockRel.first] << endl;
+		assert(locksHeld.find(lockRel.second) != locksHeld.end() && "thread unlocked a mutex which was not locked!\n");
+		locksHeld.erase(lockRel.second);
+		lockThreadMap.erase(lockRel.second);
+		log << "-   thread " << getIndex() << " unlocked " << lockRel.second << " at " << locationString[lockRel.first] << endl;
+	}
+
+	LockSet getLockset(){
+		LockSet ret;
+		for (typeof(locks.begin()) it = locks.begin(); it != locks.end(); it++){
+			ret.insert(it->second);
+		}
+		return ret;
 	}
 
 private:
@@ -90,6 +117,62 @@ private:
 	}
 };
 
+
+void logLockSet(const LockSet& lockSet){
+	for (LockSet::iterator it = lockSet.begin(); it != lockSet.end(); it++){
+		log << "\t" << *it << endl;
+	}
+}
+
+class Deadlock{
+public:
+	LockSet locks; //Interestingly order of locks does not matter
+	void tryDeadlock(Thread* thread, LockAddress lock){
+		log << "at tryDeadlock" << endl;
+
+		log << "all locks held:" << endl;
+		logLockSet(locksHeld);
+		log << "thread locks:" << endl;
+		logLockSet(thread->getLockset());
+		log << "deadlock locks:" << endl;
+		logLockSet(locks);
+
+		if (locks.find(lock) == locks.end())
+			return;
+		LockSet threadLocks = thread->getLockset();
+		LockSet intersect;
+		set_intersection(locks.begin(),locks.end(),threadLocks.begin(),threadLocks.end(),
+				std::inserter(intersect,intersect.begin()));
+
+		log << "intesect:" << endl;
+		logLockSet(intersect);
+
+		if (intersect.empty())
+			return;
+		log << "something to do here" << endl;
+		//so thread has some locks of deadlock and wants a lock of it, we make it stop
+		LockSet remaining;
+		set_difference(locks.begin(), locks.end(), locksHeld.begin(), locksHeld.end(),
+				std::inserter(remaining, remaining.begin()));
+		if (remaining.empty()){
+			log << "all locks in deadlock are held, signaling all threads hoping for deadlock" << endl;
+			pthread_cond_broadcast(&wait);
+		}else{
+			log << "making thread wait" << endl;
+			timespec ts;
+			timeval now;
+			gettimeofday(&now, NULL);
+			ts.tv_sec = now.tv_sec + 1;
+			ts.tv_nsec = 0;
+			pthread_cond_timedwait(&wait, &tracerBigLock, &ts);
+		}
+	}
+	Deadlock(){
+		pthread_cond_init(&wait, NULL);
+	}
+private:
+	pthread_cond_t wait;
+};
 
 
 void printRuntimeAddressOrderGraph(){
@@ -155,6 +238,45 @@ void initLocationStringMap(){
 	fin.close();
 }
 
+
+/// selects a deadlock to reveal
+///TODO: this is just a temperary approach
+Deadlock theDeadlock;
+void selectDeadlock(){
+
+	for (typeof(RAOG.begin()) it = RAOG.begin(); it != RAOG.end(); it++){
+		LockAddress node = it->first;
+		map<LockAddress, LockAddress> parent;
+		queue<LockAddress> queue;
+		queue.push(node);
+		parent[node] = 0;
+		while (!queue.empty()){
+			LockAddress from = queue.front();
+			queue.pop();
+			for (AdjList::iterator nei = RAOG[from].begin(); nei != RAOG[from].end(); nei++){
+				LockAddress to = nei->first;
+				if (parent.find(to) != parent.end()){
+					log << "found cycle: ";
+					LockAddress temp = from;
+					while (temp != to){
+						log << temp << " - ";
+						theDeadlock.locks.insert(temp);
+						temp = parent[temp];
+					}
+					log << to << endl;
+					theDeadlock.locks.insert(to);
+					return;
+				}else{
+					parent[to] = from;
+					queue.push(to);
+				}
+
+			}
+
+		}
+	}
+}
+
 //class Graph{
 //public:
 //
@@ -173,14 +295,16 @@ vector<Thread*> Thread::threads = vector<Thread*>();
 void initialize(){
 	printf("tracer started\n");
 	pthread_mutex_init(&tracerBigLock, NULL);
+	pthread_mutex_init(&pthreadOperationLock, NULL);
 	initLocationStringMap();
 	readRuntimeAddressOrderGraph();
-
-
+	selectDeadlock();
 }
 
 void beforeLock(pthread_mutex_t *m, Location loc){
 	printf("%d: thread %d is going to lock %p\n", loc, Thread::self()->getIndex(), m);
+	log << "thread " << Thread::self()->getIndex() << " going to lock " << m<< " at " << locationString[loc] << endl;
+	theDeadlock.tryDeadlock(Thread::self(), m);
 }
 
 void afterLock(pthread_mutex_t *m, Location loc){
@@ -216,17 +340,25 @@ void beforeLock(pthread_mutex_t *m, int32_t loc){
 	pthread_mutex_lock(&LockTracer::tracerBigLock);
 	LockTracer::beforeLock(m, loc);
 	pthread_mutex_unlock(&LockTracer::tracerBigLock);
-	//pthread_yield();
+
+	//pthread_yield(); //wow! big effect
+
+
 }
 
 void afterLock(pthread_mutex_t *m, int32_t loc){
 	pthread_mutex_lock(&LockTracer::tracerBigLock);
 	LockTracer::afterLock(m, loc);
 	pthread_mutex_unlock(&LockTracer::tracerBigLock);
+
+}
+
+void beforeUnlock(pthread_mutex_t *m, int32_t loc){
+	pthread_mutex_lock(&LockTracer::tracerBigLock);
 }
 
 void afterUnlock(pthread_mutex_t *m, int32_t loc){
-	pthread_mutex_lock(&LockTracer::tracerBigLock);
+
 	LockTracer::afterUnlock(m, loc);
 	pthread_mutex_unlock(&LockTracer::tracerBigLock);
 }
