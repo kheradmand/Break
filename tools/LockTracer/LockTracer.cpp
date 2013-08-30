@@ -23,6 +23,8 @@
 using namespace std;
 
 
+#define WAIT_TIME 1
+
 namespace LockTracer{
 
 class Thread;
@@ -37,14 +39,171 @@ pthread_mutex_t pthreadOperationLock;
 
 ofstream log("trace.log");
 
-typedef map< LockAddress, int> AdjList;
-map<LockAddress, AdjList> RAOG; //runtime address order graph
 
 map<Location, string> locationString;
 
 typedef map<LockAddress, Thread*> LockThreadMap;
 LockThreadMap lockThreadMap;
 LockSet locksHeld;
+
+
+class LockGraph{
+public:
+	class Node;
+	typedef map<Node*, int> AdjacencyList;
+	typedef set<Node*> NodeSet;
+	class Node{
+	private:
+		AdjacencyList outEdges;
+		AdjacencyList inEdges;
+		LockAddress value;
+		void addInEdge(Node* par, int w = 1){
+			if (inEdges.find(par) == inEdges.end()){
+				inEdges[par] = 0;
+			}
+			inEdges[par] += w;
+		}
+	public:
+		Node(LockAddress val):value(val){
+		}
+		void addEdge(Node* nei, int w = 1){
+			if (outEdges.find(nei) == outEdges.end()){
+				outEdges[nei] = 0;
+			}
+			outEdges[nei] += w;
+			nei->addInEdge(this, w);
+		}
+
+		LockAddress getValue() const{
+			return value;
+		}
+		AdjacencyList getOutEdges() const{
+			return outEdges;
+		}
+		AdjacencyList getInEdges() const{
+			return inEdges;
+		}
+		int getEdgeWeight(Node* nei){
+			if (outEdges.find(nei) == outEdges.end())
+				return 0;
+			return outEdges[nei];
+		}
+		NodeSet getOutNeibours(){
+			NodeSet ret;
+			for (AdjacencyList::iterator it = outEdges.begin(); it != outEdges.end(); it++){
+				ret.insert(it->first);
+			}
+			return ret;
+		}
+		NodeSet getInNeibours(){
+			NodeSet ret;
+			for (AdjacencyList::iterator it = outEdges.begin(); it != outEdges.end(); it++){
+				ret.insert(it->first);
+			}
+			return ret;
+		}
+		friend ostream& operator<<(ostream& out, const Node& node);
+	};
+private:
+	map<LockAddress, Node*> lockNodeMap;
+	string name;
+	bool autosave;
+public:
+	LockGraph(const string& _name, bool autos = 0):name(_name), autosave(autos){
+	}
+	~LockGraph(){
+		if (autosave)
+			save();
+	}
+
+	string getName() const{
+		return name;
+	}
+
+	Node* getNode(LockAddress value){
+		if (lockNodeMap.find(value) == lockNodeMap.end())
+			lockNodeMap[value] = new Node(value);
+		return lockNodeMap[value];
+	}
+
+	void addEdge(LockAddress from, LockAddress to, int w = 1){
+		getNode(from)->addEdge(getNode(to), w);
+	}
+
+	unsigned int size() const{
+		return lockNodeMap.size();
+	}
+
+	NodeSet getNodeSet(){
+		NodeSet ret;
+		for (typeof(lockNodeMap.begin()) it = lockNodeMap.begin(); it != lockNodeMap.end(); it++)
+			ret.insert(it->second);
+		return ret;
+	}
+
+	friend ostream& operator<<(ostream& out, const LockGraph& graph);
+	friend istream& operator>>(istream& out, LockGraph& graph);
+
+	void load(){
+		ifstream fin(("_"+name+".txt").c_str());
+		fin >> *this;
+		fin.close();
+
+	}
+
+	void save(){
+		ofstream fout(("_"+name+".txt").c_str());
+		fout << *this;
+		fout.close();
+	}
+
+};
+
+
+ostream& operator<<(ostream& out, const LockGraph::Node& node){
+	out << node.getValue() << " " << node.outEdges.size() << endl;
+	for (LockGraph::AdjacencyList::const_iterator it = node.outEdges.begin(); it != node.outEdges.end(); it++){
+		out << "\t" << it->first->value << " " << it->second;
+	}
+	return out;
+}
+ostream& operator<<(ostream& out, const LockGraph& graph){
+	out << graph.name << " " << graph.size() << endl;
+	for (typeof(graph.lockNodeMap.begin()) n = graph.lockNodeMap.begin(); n != graph.lockNodeMap.end(); n++){
+		out << *(n->second) << endl;
+	}
+	out << endl;
+	return out;
+}
+
+
+
+istream& operator>>(istream& in, LockGraph& graph){
+	graph.lockNodeMap.clear();
+	int n;
+	if (in >> graph.name){
+		in >> n;
+		for (int i = 0; i < n; i++){
+			LockAddress adr;
+			void* temp;
+			in >> temp;
+			adr = LockAddress(temp);
+			LockGraph::Node* node = graph.getNode(adr);
+			int m;
+			in >> m;
+			for (int j=0; j < m;j++){
+				in >> temp;
+				int w;
+				in >> w;
+				graph.addEdge(adr, LockAddress(temp), w);
+			}
+		}
+	}
+	return in;
+}
+
+
+LockGraph RAOG("runtime-address-order-graph");
 
 class Thread{
 public:
@@ -77,11 +236,7 @@ public:
 			LockAddress to = lockAq.second;
 			for (typeof(locks.begin()) it = locks.begin(); it != locks.end(); it++){
 				LockAddress from = it->second;
-				if (RAOG.find(from) == RAOG.end())
-					RAOG[from] = AdjList();
-				if (RAOG[from].find(to) == RAOG[from].end())
-					RAOG[from][to] = 0;
-				RAOG[from][to]++;
+				RAOG.addEdge(from, to);
 			}
 		}
 		locks.push_back(lockAq);
@@ -107,12 +262,12 @@ public:
 		}
 		return ret;
 	}
-
+	vector<LockOperation> locks;
 private:
 	static vector<Thread*> threads;
 	const pthread_t pthread;
 	int index;
-	vector<LockOperation> locks;
+
 	Thread(const pthread_t &p, int idx):pthread(p), index(idx){
 	}
 };
@@ -124,6 +279,94 @@ void logLockSet(const LockSet& lockSet){
 	}
 }
 
+
+//================================================Idea #3=========================================
+
+
+map<LockGraph::Node*, int> component; //SCComponent number the node belongs to
+LockGraph::NodeSet visited;
+queue<LockGraph::Node*> topologicalOrder;
+pthread_cond_t dummyCond;
+int componentNum;
+void topSort(LockGraph::Node* v){
+	visited.insert(v);
+	LockGraph::NodeSet neibs = v->getOutNeibours();
+	for (LockGraph::NodeSet::iterator it = neibs.begin(); it != neibs.end(); it++){
+		if (visited.find(*it) == visited.end()){
+			topSort(*it);
+		}
+	}
+	topologicalOrder.push(v);
+}
+void assignCompNumber(LockGraph::Node* v, int number){
+	log << "\t" << v->getValue();
+	visited.insert(v);
+	component[v] = number;
+	LockGraph::NodeSet pars = v->getInNeibours();
+	for (LockGraph::NodeSet::iterator it = pars.begin(); it != pars.end(); it++){
+		if (visited.find(*it) == visited.end()){
+			assignCompNumber(*it, number);
+		}
+	}
+}
+void findSCC(){
+	pthread_cond_init(&dummyCond, NULL);
+
+	LockGraph::NodeSet nodes = RAOG.getNodeSet();
+	visited.clear();
+	component.clear();
+	componentNum = 0;
+
+	for (LockGraph::NodeSet::iterator it = nodes.begin(); it != nodes.end(); it++){
+		if (visited.find(*it) == visited.end()){
+			topSort(*it);
+		}
+	}
+
+	visited.clear();
+	log << "SCCs:\n";
+	while (!topologicalOrder.empty()){
+		LockGraph::Node* node = topologicalOrder.front();
+		topologicalOrder.pop();
+		log << "Component #" << componentNum+1 << ":";
+		if (visited.find(node) == visited.end())
+			assignCompNumber(node, ++componentNum);
+		log << endl;
+	}
+}
+
+//LockGraph depGraph("lock-dependecy-graph");
+
+
+
+void checkSCC(Thread* thread, LockAddress lock){
+	int comp;
+	if (component.find(RAOG.getNode(lock)) == component.end()){
+		log << "WARNING: " << lock << " is new and does not have component number assigning 0 to it" << endl;
+		comp = 0;
+	}else
+		comp = component[RAOG.getNode(lock)];
+	int lastComp = 10000000; //inf
+	if (!thread->locks.empty()){
+		lastComp = component[RAOG.getNode(thread->locks.back().second)];
+	}
+	if (lastComp <= comp){
+		log << "threads want to lock mutex in higher or same component, making it wait" << endl;
+		timespec ts;
+		timeval now;
+		gettimeofday(&now, NULL);
+		ts.tv_sec = now.tv_sec + WAIT_TIME;
+		ts.tv_nsec = 0;
+		pthread_cond_timedwait(&dummyCond, &tracerBigLock, &ts);
+	}
+
+
+}
+
+//================================================================================================
+
+
+//================================================Idea #2=========================================
 class Deadlock{
 public:
 	LockSet locks; //Interestingly order of locks does not matter
@@ -139,12 +382,15 @@ public:
 
 		if (locks.find(lock) == locks.end())
 			return;
+
+
+
 		LockSet threadLocks = thread->getLockset();
 		LockSet intersect;
 		set_intersection(locks.begin(),locks.end(),threadLocks.begin(),threadLocks.end(),
 				std::inserter(intersect,intersect.begin()));
 
-		log << "intesect:" << endl;
+		log << "intersect:" << endl;
 		logLockSet(intersect);
 
 		if (intersect.empty())
@@ -162,7 +408,7 @@ public:
 			timespec ts;
 			timeval now;
 			gettimeofday(&now, NULL);
-			ts.tv_sec = now.tv_sec + 1;
+			ts.tv_sec = now.tv_sec + WAIT_TIME;
 			ts.tv_nsec = 0;
 			pthread_cond_timedwait(&wait, &tracerBigLock, &ts);
 		}
@@ -174,57 +420,46 @@ private:
 	pthread_cond_t wait;
 };
 
+/// selects a deadlock to reveal
+///TODO: this is just a temporary approach
+Deadlock theDeadlock;
+void selectDeadlock(){
+	LockGraph::NodeSet nodes = RAOG.getNodeSet();
+	for (LockGraph::NodeSet::iterator it = nodes.begin(); it != nodes.end(); it++){
+		LockGraph::Node* node = *it;
+		map<LockGraph::Node*, LockGraph::Node*> parent;
+		queue<LockGraph::Node*> queue;
+		queue.push(node);
+		parent[node] = 0;
+		while (!queue.empty()){
+			LockGraph::Node* from = queue.front();
+			queue.pop();
+			LockGraph::NodeSet neibs = from->getOutNeibours();
+			for (LockGraph::NodeSet::iterator nei = neibs.begin(); nei != neibs.end(); nei++){
+				LockGraph::Node* to = *nei;
+				if (parent.find(to) != parent.end()){
+					log << "found cycle: ";
+					LockGraph::Node* temp = from;
+					while (temp != to){
+						log << temp->getValue() << " - ";
+						theDeadlock.locks.insert(temp->getValue());
+						temp = parent[temp];
+					}
+					log << to << endl;
+					theDeadlock.locks.insert(to->getValue());
+					return;
+				}else{
+					parent[to] = from;
+					queue.push(to);
+				}
 
-void printRuntimeAddressOrderGraph(){
-	ofstream fout("runtime-address-order-graph.txt");
-	fout << RAOG.size() << endl;
-	for (typeof(RAOG.begin()) n = RAOG.begin(); n != RAOG.end(); n++){
-		fout << n->first << " " << n->second.size() << endl;
-		for (AdjList::iterator e = n->second.begin(); e != n->second.end(); e++){
-			fout << "\t" << e->first << " " << e->second ;
-		}
-		fout << endl;
-	}
-	fout.close();
-}
-
-void logRuntimeAddressOrderGraph(){
-	log << RAOG.size() << endl;
-	for (typeof(RAOG.begin()) n = RAOG.begin(); n != RAOG.end(); n++){
-		log << n->first << " " << n->second.size() << endl;
-		for (AdjList::iterator e = n->second.begin(); e != n->second.end(); e++){
-			log << "\t" << e->first << " " << e->second ;
-		}
-		log << endl;
-	}
-}
-
-void readRuntimeAddressOrderGraph(){
-	ifstream fin("runtime-address-order-graph.txt");
-
-	int nodes;
-	if (fin >> nodes){
-		for (int i = 0; i < nodes; i++){
-			void* temp;
-			LockAddress n;
-			int neibs;
-			fin >> temp >> neibs;
-			n = (LockAddress)temp;
-			RAOG[n] = AdjList();
-			for (int j = 0; j < neibs; j++){
-				LockAddress m;
-				int w;
-				fin >> temp >> w;
-				m = (LockAddress)temp;
-				RAOG[n][m] = w;
 			}
+
 		}
 	}
-
-	fin.close();
-	log << "initial runtime location order graph:\n";
-	logRuntimeAddressOrderGraph();
 }
+
+//================================================================================================
 
 
 void initLocationStringMap(){
@@ -239,56 +474,6 @@ void initLocationStringMap(){
 }
 
 
-/// selects a deadlock to reveal
-///TODO: this is just a temperary approach
-Deadlock theDeadlock;
-void selectDeadlock(){
-
-	for (typeof(RAOG.begin()) it = RAOG.begin(); it != RAOG.end(); it++){
-		LockAddress node = it->first;
-		map<LockAddress, LockAddress> parent;
-		queue<LockAddress> queue;
-		queue.push(node);
-		parent[node] = 0;
-		while (!queue.empty()){
-			LockAddress from = queue.front();
-			queue.pop();
-			for (AdjList::iterator nei = RAOG[from].begin(); nei != RAOG[from].end(); nei++){
-				LockAddress to = nei->first;
-				if (parent.find(to) != parent.end()){
-					log << "found cycle: ";
-					LockAddress temp = from;
-					while (temp != to){
-						log << temp << " - ";
-						theDeadlock.locks.insert(temp);
-						temp = parent[temp];
-					}
-					log << to << endl;
-					theDeadlock.locks.insert(to);
-					return;
-				}else{
-					parent[to] = from;
-					queue.push(to);
-				}
-
-			}
-
-		}
-	}
-}
-
-//class Graph{
-//public:
-//
-//	class Node{
-//	public:
-//		Location value;
-//
-//
-//	};
-//};
-
-
 vector<Thread*> Thread::threads = vector<Thread*>();
 
 
@@ -297,14 +482,18 @@ void initialize(){
 	pthread_mutex_init(&tracerBigLock, NULL);
 	pthread_mutex_init(&pthreadOperationLock, NULL);
 	initLocationStringMap();
-	readRuntimeAddressOrderGraph();
+	RAOG.load();
+	log << "initial runtime location order graph:\n";
+	log << RAOG << endl;
+	findSCC();
 	selectDeadlock();
 }
 
 void beforeLock(pthread_mutex_t *m, Location loc){
 	printf("%d: thread %d is going to lock %p\n", loc, Thread::self()->getIndex(), m);
 	log << "thread " << Thread::self()->getIndex() << " going to lock " << m<< " at " << locationString[loc] << endl;
-	theDeadlock.tryDeadlock(Thread::self(), m);
+	//theDeadlock.tryDeadlock(Thread::self(), m);
+	checkSCC(Thread::self(), m);
 }
 
 void afterLock(pthread_mutex_t *m, Location loc){
@@ -321,9 +510,9 @@ void finalize(){
 	printf("tracer ended\n");
 
 	log << "final run time location order graph:" << endl;
-	logRuntimeAddressOrderGraph();
+	log << RAOG << endl;
 
-	printRuntimeAddressOrderGraph();
+	RAOG.save();
 	log.close();
 }
 
@@ -340,9 +529,9 @@ void beforeLock(pthread_mutex_t *m, int32_t loc){
 	pthread_mutex_lock(&LockTracer::tracerBigLock);
 	LockTracer::beforeLock(m, loc);
 	pthread_mutex_unlock(&LockTracer::tracerBigLock);
-
+	//================================================Idea #1=========================================
 	//pthread_yield(); //wow! big effect
-
+	//================================================================================================
 
 }
 
