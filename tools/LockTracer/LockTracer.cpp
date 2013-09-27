@@ -20,10 +20,17 @@
 #include <fstream>
 #include <algorithm>
 #include <sys/time.h>
+
+
 using namespace std;
 
 
-#define WAIT_TIME 1
+#define WAIT_TIME 100
+
+static int getRandomWaitTime(int scale = 1){
+	return WAIT_TIME+((rand()%(WAIT_TIME/2))*scale);
+}
+
 
 namespace LockTracer{
 
@@ -44,7 +51,7 @@ map<Location, string> locationString;
 
 typedef map<LockAddress, Thread*> LockThreadMap;
 LockThreadMap lockThreadMap;
-LockSet locksHeld;
+LockSet allLocksHeld;
 
 
 class LockGraph{
@@ -203,7 +210,7 @@ istream& operator>>(istream& in, LockGraph& graph){
 }
 
 
-LockGraph RAOG("runtime-address-order-graph");
+LockGraph RAOG("runtime-address-order-graph", 1);
 
 class Thread{
 public:
@@ -234,23 +241,36 @@ public:
 		if (!locks.empty()){
 			//add edge in runtime location order graph from all last locks to this lock
 			LockAddress to = lockAq.second;
-			for (typeof(locks.begin()) it = locks.begin(); it != locks.end(); it++){
-				LockAddress from = it->second;
-				RAOG.addEdge(from, to);
-			}
+			for (typeof(locks.begin()) it = locks.begin(); it != locks.end(); it++)
+				if (it->second > 0){
+					LockAddress from = it->first;
+					log << "adding edge from " << from << " to " << to << endl;
+					RAOG.addEdge(from, to);
+				}
 		}
-		locks.push_back(lockAq);
-		assert(locksHeld.find(lockAq.second) == locksHeld.end() && "thread locked a mutex which was locked!\n");
+		//locks.push_back(lockAq); locks order is troublesome, make it a set
+
+		//locks[lockAq.second] = lockAq.first; there are recursive mutexes :(
+		locks[lockAq.second]++;
+		if (locks[lockAq.second] == 1)
+			diffLocksHeldNum++;
+		lockHistory.push_back(lockAq);
+		//assert(allLocksHeld.find(lockAq.second) == allLocksHeld.end() && "thread locked a mutex which was locked!\n");
 		lockThreadMap[lockAq.second] = this;
-		locksHeld.insert(lockAq.second);
+		allLocksHeld.insert(lockAq.second);
 		log << "+ thread " << getIndex() << " locked " << lockAq.second << " at " << locationString[lockAq.first] << endl;
 
 	}
 
 	void unlock(const LockOperation &lockRel){
-		locks.pop_back();
-		assert(locksHeld.find(lockRel.second) != locksHeld.end() && "thread unlocked a mutex which was not locked!\n");
-		locksHeld.erase(lockRel.second);
+		//locks.pop_back();
+		//assert(locksHeld.find(lockRel.second) != locksHeld.end() && "thread unlocked a mutex which was not locked!\n");
+		assert(locks[lockRel.second] > 0 && "thread unlocked a mutex which was not locked!\n");
+		//locks.erase(lockRel.second);
+		locks[lockRel.second]--;
+		if (locks[lockRel.second] == 0)
+			diffLocksHeldNum--;
+		allLocksHeld.erase(lockRel.second);
 		lockThreadMap.erase(lockRel.second);
 		log << "-   thread " << getIndex() << " unlocked " << lockRel.second << " at " << locationString[lockRel.first] << endl;
 	}
@@ -258,17 +278,19 @@ public:
 	LockSet getLockset(){
 		LockSet ret;
 		for (typeof(locks.begin()) it = locks.begin(); it != locks.end(); it++){
-			ret.insert(it->second);
+			ret.insert(it->first);
 		}
 		return ret;
 	}
-	vector<LockOperation> locks;
+	map<LockAddress, int> locks;
+	vector<LockOperation> lockHistory;
+	int diffLocksHeldNum;
 private:
 	static vector<Thread*> threads;
 	const pthread_t pthread;
 	int index;
 
-	Thread(const pthread_t &p, int idx):pthread(p), index(idx){
+	Thread(const pthread_t &p, int idx):pthread(p), index(idx), diffLocksHeldNum(0){
 	}
 };
 
@@ -328,10 +350,11 @@ void findSCC(){
 	while (!topologicalOrder.empty()){
 		LockGraph::Node* node = topologicalOrder.front();
 		topologicalOrder.pop();
-		log << "Component #" << componentNum+1 << ":";
-		if (visited.find(node) == visited.end())
+		if (visited.find(node) == visited.end()){
+			log << "Component #" << componentNum+1 << ":";
 			assignCompNumber(node, ++componentNum);
-		log << endl;
+			log << endl;
+		}
 	}
 }
 
@@ -347,17 +370,20 @@ void checkSCC(Thread* thread, LockAddress lock){
 	}else
 		comp = component[RAOG.getNode(lock)];
 	int lastComp = 10000000; //inf
-	if (!thread->locks.empty()){
-		lastComp = component[RAOG.getNode(thread->locks.back().second)];
+	if (thread->diffLocksHeldNum != 0){
+		lastComp = component[RAOG.getNode(thread->lockHistory.back().second)];
 	}
 	if (lastComp <= comp){
-		log << "threads want to lock mutex in higher or same component, making it wait" << endl;
+		log << "thread " << thread->getIndex() << " want to lock mutex in higher or same component, making it wait" << endl;
 		timespec ts;
 		timeval now;
-		gettimeofday(&now, NULL);
-		ts.tv_sec = now.tv_sec + WAIT_TIME;
-		ts.tv_nsec = 0;
-		pthread_cond_timedwait(&dummyCond, &tracerBigLock, &ts);
+		pthread_mutex_unlock(&tracerBigLock);
+		usleep(getRandomWaitTime());
+		pthread_mutex_lock(&tracerBigLock);
+//		gettimeofday(&now, NULL);
+//		ts.tv_sec = now.tv_sec + WAIT_TIME;
+//		ts.tv_nsec = 0;
+//		pthread_cond_timedwait(&dummyCond, &tracerBigLock, &ts);
 	}
 
 
@@ -374,7 +400,7 @@ public:
 		log << "at tryDeadlock" << endl;
 
 		log << "all locks held:" << endl;
-		logLockSet(locksHeld);
+		logLockSet(allLocksHeld);
 		log << "thread locks:" << endl;
 		logLockSet(thread->getLockset());
 		log << "deadlock locks:" << endl;
@@ -398,7 +424,7 @@ public:
 		log << "something to do here" << endl;
 		//so thread has some locks of deadlock and wants a lock of it, we make it stop
 		LockSet remaining;
-		set_difference(locks.begin(), locks.end(), locksHeld.begin(), locksHeld.end(),
+		set_difference(locks.begin(), locks.end(), allLocksHeld.begin(), allLocksHeld.end(),
 				std::inserter(remaining, remaining.begin()));
 		if (remaining.empty()){
 			log << "all locks in deadlock are held, signaling all threads hoping for deadlock" << endl;
@@ -477,6 +503,8 @@ void initLocationStringMap(){
 vector<Thread*> Thread::threads = vector<Thread*>();
 
 
+
+
 void initialize(){
 	printf("tracer started\n");
 	pthread_mutex_init(&tracerBigLock, NULL);
@@ -519,9 +547,13 @@ void finalize(){
 
 }
 
+
+
+
 /// Wrappers for linking purposes
 
 void initialize(){
+	srand(time(0));
 	LockTracer::initialize();
 }
 
@@ -555,3 +587,18 @@ void afterUnlock(pthread_mutex_t *m, int32_t loc){
 void finalize(){
 	LockTracer::finalize();
 }
+
+
+void beforeStore(void* address, int32_t loc){
+	//printf("store %p\n", address);
+	usleep(getRandomWaitTime());
+}
+
+void afterStore(void* address, int32_t loc){
+	//printf("stored\n");
+}
+
+void beforeLoad(void* address, int32_t loc){
+	//printf("load %p\n", address);
+}
+
