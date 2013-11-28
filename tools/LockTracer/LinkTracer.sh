@@ -6,7 +6,10 @@ BREAKOBJ=~/Desktop/Break/build33
 
 if [[ $# > 0 ]]; then
 	echo "Instumenting program..."
+	echo "- instrumenting locks..."
 	opt -load $BREAKOBJ/Debug+Asserts/lib/Instrumentation.so -lock-instrument -o instrumented.bc < $1
+	echo "- instrumenting memory accesses..."
+	opt -load $BREAKOBJ/Debug+Asserts/lib/Instrumentation.so -mem-instrument -o instrumented.bc < instrumented.bc
 	echo "Compiling Tracer..."
 	clang++ -c -emit-llvm -o LockTracer.bc $TRACER/LockTracer.cpp 
 	echo "Linking instrumeted code with Tracer..."
