@@ -52,6 +52,7 @@ if [[ $# > 1 ]]; then
 		let all=0;
 		let deadlocks=0;
 		let cul=0;
+		let culdead=0;
 		for i in `ls $2_test_logs/*.log`; do
 			echo $i:;
 			cat  $i ;
@@ -59,7 +60,8 @@ if [[ $# > 1 ]]; then
 			let cul=cul+`cat $i`;
 			if [ `cat $i` = `cat $i.old` ]; then
 				echo -n "looks like deadlock!";
-				let deadlocks=deadlocks+1; 
+				let deadlocks=deadlocks+1;
+				let culdead=culdead+`cat $i`; 
 			fi
 			cat $i > $i.old;
 			echo;
@@ -68,6 +70,10 @@ if [[ $# > 1 ]]; then
 			let avg=cul/all;
 			echo deadlocks: $deadlocks / $all;
 			echo average runs: $avg;
+			if [[ $deadlocks > 0 ]]; then
+				let avgdead=culdead/deadlocks;
+				echo average run on deadlocks: $avgdead;
+			fi 
 		fi
 		;;
 	esac
