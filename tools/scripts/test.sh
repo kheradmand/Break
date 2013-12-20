@@ -22,9 +22,14 @@ if [[ $# > 1 ]]; then
 		mkdir $2_test_logs;
 		for t in `seq 1 $3`; do
 			echo -n test $t: ;
+			mkdir $2_test_logs/$t;
+			cp $2 $2_test_logs/$t/;
+			if [ -e location-index-map.txt ]; then
+				cp location-index-map.txt $2_test_logs/$t/;
+			fi
 			(for i in `seq 1 1000000`; do 
 				echo $i > $2_test_logs/$t.log;
-				./$2 >> $2_test_logs/$t.log;
+				./$2_test_logs/$t/$2 >> $2_test_logs/$t.log;
 				echo -1 > $2_test_logs/$t.log.old;
 			done)&
 			echo $! >> $2_test_logs/pid
@@ -38,7 +43,12 @@ if [[ $# > 1 ]]; then
 		fi
 		echo "stopping the tests...."
 		for i in `cat $2_test_logs/pid`; do
-			echo $i;
+			echo killing $i;
+			child=`ps --ppid $i -o pid --no-headers`;
+			for c in $child; do
+				echo "--- killing child" $c;
+				kill $c;
+			done
 			kill $i;
 		done
 		ps aux | grep $2;
@@ -67,11 +77,11 @@ if [[ $# > 1 ]]; then
 			echo;
 		done
 		if [[ $all > 0 ]]; then
-			let avg=cul/all;
 			echo deadlocks: $deadlocks / $all;
+			avg=`bc <<< "scale=2; $cul/$all"`;
 			echo average runs: $avg;
 			if [[ $deadlocks > 0 ]]; then
-				let avgdead=culdead/deadlocks;
+				avgdead=`bc <<< "scale=2; $culdead/$deadlocks"`;
 				echo average run on deadlocks: $avgdead;
 			fi 
 		fi
