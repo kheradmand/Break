@@ -49,15 +49,26 @@ if [[ $# > 1 ]]; then
 			echo "no such test is running";
 			exit 1;
 		fi
+		let all=0;
+		let deadlocks=0;
+		let cul=0;
 		for i in `ls $2_test_logs/*.log`; do
 			echo $i:;
 			cat  $i ;
+			let all=all+1;
+			let cul=cul+`cat $i`;
 			if [ `cat $i` = `cat $i.old` ]; then
-				echo -n "looks like deadlock!"; 
+				echo -n "looks like deadlock!";
+				let deadlocks=deadlocks+1; 
 			fi
 			cat $i > $i.old;
 			echo;
 		done
+		if [[ $all > 0 ]]; then
+			let avg=cul/all;
+			echo deadlocks: $deadlocks / $all;
+			echo average runs: $avg;
+		fi
 		;;
 	esac
 else
