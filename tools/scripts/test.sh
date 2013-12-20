@@ -55,6 +55,7 @@ if [[ $# > 1 ]]; then
 			if [ `cat $i` = `cat $i.old` ]; then
 				echo -n "looks like deadlock!"; 
 			fi
+			cat $i > $i.old;
 			echo;
 		done
 		;;
