@@ -24,13 +24,26 @@ if [[ $# > 1 ]]; then
 			echo -n test $t: ;
 			mkdir $2_test_logs/$t;
 			cp $2 $2_test_logs/$t/;
+			cp /usr/bin/time $2_test_logs/$t/;
 			if [ -e location-index-map.txt ]; then
 				cp location-index-map.txt $2_test_logs/$t/;
 			fi
+			echo -1 > $2_test_logs/$t.log.old;
+			echo 0 > $2_test_logs/$t.log.time.avg
 			(for i in `seq 1 1000000`; do 
 				echo $i > $2_test_logs/$t.log;
-				./$2_test_logs/$t/$2 >> $2_test_logs/$t.log;
-				echo -1 > $2_test_logs/$t.log.old;
+				cd $2_test_logs/$t/;
+				./time --quiet -o ../$t.log.time -f %U+%S `pwd`/$2 > ../$t.output;  #we execute the binary in the path, this way any file output (e.g trace.log) will be local and no conflict happens
+				cd ../..;
+				let ret=$?;
+				echo $ret > $2_test_logs/$t.log.rc
+				if [ ! $ret -eq 0 ]; then
+					exit 1;
+				fi	
+				lastavg=`cat $2_test_logs/$t.log.time.avg`;
+				currenttime=`cat $2_test_logs/$t.log.time`;
+				time=`bc <<< "scale=3; ($lastavg*($i-1)+$currenttime)/$i"`;
+				echo $time > $2_test_logs/$t.log.time.avg;
 			done)&
 			echo $! >> $2_test_logs/pid
 			echo $!;
@@ -63,13 +76,21 @@ if [[ $# > 1 ]]; then
 		let deadlocks=0;
 		let cul=0;
 		let culdead=0;
+		let timesum=0;
 		for i in `ls $2_test_logs/*.log`; do
 			echo $i:;
 			cat  $i ;
+			echo average runtime: `cat $i.time.avg`;
+			thistime=`cat $i.time.avg`;
+			timesum=`bc <<< "scale=3; $timesum+$thistime"`;
 			let all=all+1;
 			let cul=cul+`cat $i`;
 			if [ `cat $i` = `cat $i.old` ]; then
-				echo -n "looks like deadlock!";
+				if [ `cat $i.rc` != 0 ]; then
+					echo "program crashed!";
+				else
+					echo "looks like deadlock!";
+				fi
 				let deadlocks=deadlocks+1;
 				let culdead=culdead+`cat $i`; 
 			fi
@@ -77,13 +98,15 @@ if [[ $# > 1 ]]; then
 			echo;
 		done
 		if [[ $all > 0 ]]; then
-			echo deadlocks: $deadlocks / $all;
+			echo deadlocks/crashes: $deadlocks / $all;
 			avg=`bc <<< "scale=2; $cul/$all"`;
 			echo average runs: $avg;
 			if [[ $deadlocks > 0 ]]; then
 				avgdead=`bc <<< "scale=2; $culdead/$deadlocks"`;
-				echo average run on deadlocks: $avgdead;
-			fi 
+				echo average run on deadlocks/crashes: $avgdead;
+			fi
+			avgtime=`bc <<< "scale=3; $timesum/$all"`;
+			echo overall average runtime: $avgtime
 		fi
 		;;
 	esac
