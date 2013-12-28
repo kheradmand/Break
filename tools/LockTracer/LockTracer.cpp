@@ -44,7 +44,9 @@ typedef set<LockAddress> LockSet;
 pthread_mutex_t tracerBigLock;
 pthread_mutex_t pthreadOperationLock;
 
+#ifdef DEBUG
 ofstream log("trace.log");
+#endif
 
 
 map<Location, string> locationString;
@@ -244,7 +246,9 @@ public:
 			for (typeof(locks.begin()) it = locks.begin(); it != locks.end(); it++)
 				if (it->second > 0){
 					LockAddress from = it->first;
+#ifdef DEBUG
 					log << "adding edge from " << from << " to " << to << endl;
+#endif
 					RAOG.addEdge(from, to);
 				}
 		}
@@ -258,7 +262,9 @@ public:
 		//assert(allLocksHeld.find(lockAq.second) == allLocksHeld.end() && "thread locked a mutex which was locked!\n");
 		lockThreadMap[lockAq.second] = this;
 		allLocksHeld.insert(lockAq.second);
+#ifdef DEBUG
 		log << "+ thread " << getIndex() << " locked " << lockAq.second << " at " << locationString[lockAq.first] << endl;
+#endif
 
 	}
 
@@ -272,7 +278,9 @@ public:
 			diffLocksHeldNum--;
 		allLocksHeld.erase(lockRel.second);
 		lockThreadMap.erase(lockRel.second);
+#ifdef DEBUG
 		log << "-   thread " << getIndex() << " unlocked " << lockRel.second << " at " << locationString[lockRel.first] << endl;
+#endif
 	}
 
 	LockSet getLockset(){
@@ -294,12 +302,13 @@ private:
 	}
 };
 
-
+#ifdef DEBUG
 void logLockSet(const LockSet& lockSet){
 	for (LockSet::iterator it = lockSet.begin(); it != lockSet.end(); it++){
 		log << "\t" << *it << endl;
 	}
 }
+#endif
 
 
 //================================================Idea #3=========================================
@@ -321,7 +330,9 @@ void topSort(LockGraph::Node* v){
 	topologicalOrder.push(v);
 }
 void assignCompNumber(LockGraph::Node* v, int number){
+#ifdef DEBUG
 	log << "\t" << v->getValue();
+#endif
 	visited.insert(v);
 	component[v] = number;
 	LockGraph::NodeSet pars = v->getInNeibours();
@@ -346,14 +357,20 @@ void findSCC(){
 	}
 
 	visited.clear();
+#ifdef DEBUG
 	log << "SCCs:\n";
+#endif
 	while (!topologicalOrder.empty()){
 		LockGraph::Node* node = topologicalOrder.front();
 		topologicalOrder.pop();
 		if (visited.find(node) == visited.end()){
+#ifdef DEBUG
 			log << "Component #" << componentNum+1 << ":";
+#endif
 			assignCompNumber(node, ++componentNum);
+#ifdef DEBUG
 			log << endl;
+#endif
 		}
 	}
 }
@@ -365,7 +382,9 @@ void findSCC(){
 void checkSCC(Thread* thread, LockAddress lock){
 	int comp;
 	if (component.find(RAOG.getNode(lock)) == component.end()){
+#ifdef DEBUG
 		log << "WARNING: " << lock << " is new and does not have component number assigning 0 to it" << endl;
+#endif
 		comp = 0;
 	}else
 		comp = component[RAOG.getNode(lock)];
@@ -374,7 +393,9 @@ void checkSCC(Thread* thread, LockAddress lock){
 		lastComp = component[RAOG.getNode(thread->lockHistory.back().second)];
 	}
 	if (lastComp <= comp){
+#ifdef DEBUG
 		log << "thread " << thread->getIndex() << " want to lock mutex in higher or same component, making it wait" << endl;
+#endif
 		timespec ts;
 		timeval now;
 		pthread_mutex_unlock(&tracerBigLock);
@@ -397,6 +418,7 @@ class Deadlock{
 public:
 	LockSet locks; //Interestingly order of locks does not matter
 	void tryDeadlock(Thread* thread, LockAddress lock){
+#ifdef DEBUG
 		log << "at tryDeadlock" << endl;
 
 		log << "all locks held:" << endl;
@@ -405,6 +427,7 @@ public:
 		logLockSet(thread->getLockset());
 		log << "deadlock locks:" << endl;
 		logLockSet(locks);
+#endif
 
 		if (locks.find(lock) == locks.end())
 			return;
@@ -415,22 +438,29 @@ public:
 		LockSet intersect;
 		set_intersection(locks.begin(),locks.end(),threadLocks.begin(),threadLocks.end(),
 				std::inserter(intersect,intersect.begin()));
-
+#ifdef DEBUG
 		log << "intersect:" << endl;
 		logLockSet(intersect);
+#endif
 
 		if (intersect.empty())
 			return;
+#ifdef DEBUG
 		log << "something to do here" << endl;
+#endif
 		//so thread has some locks of deadlock and wants a lock of it, we make it stop
 		LockSet remaining;
 		set_difference(locks.begin(), locks.end(), allLocksHeld.begin(), allLocksHeld.end(),
 				std::inserter(remaining, remaining.begin()));
 		if (remaining.empty()){
+#ifdef DEBUG
 			log << "all locks in deadlock are held, signaling all threads hoping for deadlock" << endl;
+#endif
 			pthread_cond_broadcast(&wait);
 		}else{
+#ifdef DEBUG
 			log << "making thread wait" << endl;
+#endif
 			timespec ts;
 			timeval now;
 			gettimeofday(&now, NULL);
@@ -464,14 +494,21 @@ void selectDeadlock(){
 			for (LockGraph::NodeSet::iterator nei = neibs.begin(); nei != neibs.end(); nei++){
 				LockGraph::Node* to = *nei;
 				if (parent.find(to) != parent.end()){
+#ifdef DEBUG
 					log << "found cycle: ";
+#endif
 					LockGraph::Node* temp = from;
 					while (temp != to){
+#ifdef DEBUG
 						log << temp->getValue() << " - ";
+#endif
 						theDeadlock.locks.insert(temp->getValue());
+
 						temp = parent[temp];
 					}
+#ifdef DEBUG
 					log << to << endl;
+#endif
 					theDeadlock.locks.insert(to->getValue());
 					return;
 				}else{
@@ -506,42 +543,55 @@ vector<Thread*> Thread::threads = vector<Thread*>();
 
 
 void initialize(){
+#ifdef DEBUG
 	printf("tracer started\n");
+#endif
 	pthread_mutex_init(&tracerBigLock, NULL);
 	pthread_mutex_init(&pthreadOperationLock, NULL);
 	initLocationStringMap();
 	RAOG.load();
+#ifdef DEBUG
 	log << "initial runtime location order graph:\n";
 	log << RAOG << endl;
+#endif
 	findSCC();
 	selectDeadlock();
 }
 
 void beforeLock(pthread_mutex_t *m, Location loc){
+#ifdef DEBUG
 	printf("%d: thread %d is going to lock %p\n", loc, Thread::self()->getIndex(), m);
 	log << "thread " << Thread::self()->getIndex() << " going to lock " << m<< " at " << locationString[loc] << endl;
 	//theDeadlock.tryDeadlock(Thread::self(), m);
+#endif
 	checkSCC(Thread::self(), m);
 }
 
 void afterLock(pthread_mutex_t *m, Location loc){
+#ifdef DEBUG
 	printf("%d: thread %d locked %p\n", loc, Thread::self()->getIndex(), m);
+#endif
 	Thread::self()->lock(LockOperation(loc, m));
 }
 
 void afterUnlock(pthread_mutex_t *m, Location loc){
+#ifdef DEBUG
 	printf("%d: thread %d released %p\n", loc, Thread::self()->getIndex(), m);
+#endif
 	Thread::self()->unlock(LockOperation(loc, m));
 }
 
 void finalize(){
+#ifdef DEBUG
 	printf("tracer ended\n");
 
 	log << "final run time location order graph:" << endl;
 	log << RAOG << endl;
-
+#endif
 	RAOG.save();
+#ifdef DEBUG
 	log.close();
+#endif
 }
 
 
