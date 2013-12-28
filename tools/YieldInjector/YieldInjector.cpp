@@ -69,9 +69,13 @@ void initialize(){
 }
 
 void beforeLock(pthread_mutex_t *m, Location loc){
+#ifdef DEBUG
 	//printf("%d: thread %d is going to lock %p\n", loc, getIndex(pthread_self()), m);
 	//printf("ff\n");
 	printf("+%d\n",sched_yield());
+#else
+	sched_yield();
+#endif
 
 }
 
@@ -80,11 +84,17 @@ void afterLock(pthread_mutex_t *m, Location loc){
 }
 
 void afterUnlock(pthread_mutex_t *m, Location loc){
+#ifdef DEBUG
 	printf("-%d\n",sched_yield());
+#else
+	sched_yield();
+#endif
 }
 
 void finalize(){
+#ifdef DEBUG
 	printf("tracer ended\n");
+#endif
 
 	log.close();
 }
