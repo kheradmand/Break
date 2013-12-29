@@ -33,7 +33,7 @@ if [[ $# > 1 ]]; then
 			(for i in `seq 1 1000000`; do 
 				echo $i > $2_test_logs/$t.log;
 				cd $2_test_logs/$t/;
-				./time --quiet -o ../$t.log.time -f %U+%S setarch `uname -m` -R `pwd`/$2 > ../$t.output;  #we execute the binary in the path, this way any file output (e.g trace.log) will be local and no conflict happens #we disable address space layout randomization
+				./time --quiet -o ../$t.log.time -f %U+%S `pwd`/$2 > ../$t.output;  #we execute the binary in the path, this way any file output (e.g trace.log) will be local and no conflict happens
 				cd ../..;
 				let ret=$?;
 				echo $ret > $2_test_logs/$t.log.rc
