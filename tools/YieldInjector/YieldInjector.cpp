@@ -24,6 +24,7 @@ using namespace std;
 
 
 #define WAIT_TIME 1
+//#define DEBUG
 
 namespace LockTracer{
 
@@ -36,7 +37,9 @@ typedef set<LockAddress> LockSet;
 
 pthread_mutex_t tracerBigLock;
 
+#ifdef DEBUG
 ofstream log("trace.log");
+#endif
 
 
 map<Location, string> locationString;
@@ -94,9 +97,9 @@ void afterUnlock(pthread_mutex_t *m, Location loc){
 void finalize(){
 #ifdef DEBUG
 	printf("tracer ended\n");
-#endif
 
 	log.close();
+#endif
 }
 
 
