@@ -549,14 +549,20 @@ void initialize(){
 #endif
 	pthread_mutex_init(&tracerBigLock, NULL);
 	pthread_mutex_init(&pthreadOperationLock, NULL);
+#ifdef DEBUG
+	printf("loading location index map\n");
+#endif
 	initLocationStringMap();
+#ifdef DEBUG
+	printf("loading RAOG\n");
+#endif
 	RAOG.load();
 #ifdef DEBUG
 	log << "initial runtime location order graph:\n";
 	log << RAOG << endl;
 #endif
 	findSCC();
-	selectDeadlock();
+	//selectDeadlock();
 }
 
 void beforeLock(pthread_mutex_t *m, Location loc){
