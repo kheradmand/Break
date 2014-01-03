@@ -42,11 +42,12 @@ if [[ $# > 1 ]]; then
 					;;
 				esac
 				$TIMECOMMAND `pwd`/$2 > ../$t.output;  #we execute the binary in the path, this way any file output (e.g trace.log) will be local and no conflict happens
+				let ret=$?;
 				if [ $4 = perf ]; then
-					cat ../$t.log.perf | cut -d \  -f 1 > ../$t.log.time;
+					TIMESTR=`cat ../$t.log.perf | grep "seconds time elapsed"`;
+					echo $TIMESTR | cut -d \  -f 1 > ../$t.log.time;
 				fi
 				cd ../..;
-				let ret=$?;
 				echo $ret > $2_test_logs/$t.log.rc
 				if [ ! $ret -eq 0 ]; then
 					exit 1;
