@@ -35,7 +35,7 @@ if [[ $# > 1 ]]; then
 				cd $2_test_logs/$t/;
 				case $4 in
 					perf)
-					TIMECOMMAND="perf -o ../$t.log.perf";
+					TIMECOMMAND="perf stat -o ../$t.log.perf";
 					;;
 					time)
 					TIMECOMMAND="./time --quiet -o ../$t.log.time -f %U+%S";
