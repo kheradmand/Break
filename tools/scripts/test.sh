@@ -4,14 +4,14 @@ HERE=$(pwd)
 
 
 function usage {
-	echo "usage: $0 [start/stop/log] <executable name> [<number of parrallel runs>]";
+	echo "usage: $0 [start/stop/log] <executable name> [<number of parrallel runs>] [perf/time]";
 	exit 1;
 }
 
 if [[ $# > 1 ]]; then
 	case $1 in
 		start)
-		if [[ $# < 3 ]]; then
+		if [[ $# < 4 ]]; then
 			usage;
 		fi
 		if [ -d $2_test_logs ]; then
@@ -33,7 +33,18 @@ if [[ $# > 1 ]]; then
 			(for i in `seq 1 1000000`; do 
 				echo $i > $2_test_logs/$t.log;
 				cd $2_test_logs/$t/;
-				./time --quiet -o ../$t.log.time -f %U+%S `pwd`/$2 > ../$t.output;  #we execute the binary in the path, this way any file output (e.g trace.log) will be local and no conflict happens
+				case $4 in
+					perf)
+					TIMECOMMAND="perf -o ../$t.log.perf";
+					;;
+					time)
+					TIMECOMMAND="./time --quiet -o ../$t.log.time -f %U+%S";
+					;;
+				esac
+				$TIMECOMMAND `pwd`/$2 > ../$t.output;  #we execute the binary in the path, this way any file output (e.g trace.log) will be local and no conflict happens
+				if [ $4 = perf ]; then
+					cat ../$t.log.perf | cut -d \  -f 1 > ../$t.log.time;
+				fi
 				cd ../..;
 				let ret=$?;
 				echo $ret > $2_test_logs/$t.log.rc
@@ -42,7 +53,7 @@ if [[ $# > 1 ]]; then
 				fi	
 				lastavg=`cat $2_test_logs/$t.log.time.avg`;
 				currenttime=`cat $2_test_logs/$t.log.time`;
-				time=`bc <<< "scale=3; ($lastavg*($i-1)+$currenttime)/$i"`;
+				time=`bc <<< "scale=10; ($lastavg*($i-1)+$currenttime)/$i"`;
 				echo $time > $2_test_logs/$t.log.time.avg;
 			done)&
 			echo $! >> $2_test_logs/pid
@@ -82,7 +93,7 @@ if [[ $# > 1 ]]; then
 			cat  $i ;
 			echo average runtime: `cat $i.time.avg`;
 			thistime=`cat $i.time.avg`;
-			timesum=`bc <<< "scale=3; $timesum+$thistime"`;
+			timesum=`bc <<< "scale=10; $timesum+$thistime"`;
 			let all=all+1;
 			let cul=cul+`cat $i`;
 			if [ `cat $i` = `cat $i.old` ]; then
@@ -105,7 +116,7 @@ if [[ $# > 1 ]]; then
 				avgdead=`bc <<< "scale=2; $culdead/$deadlocks"`;
 				echo average run on deadlocks/crashes: $avgdead;
 			fi
-			avgtime=`bc <<< "scale=3; $timesum/$all"`;
+			avgtime=`bc <<< "scale=10; $timesum/$all"`;
 			echo overall average runtime: $avgtime
 		fi
 		;;
