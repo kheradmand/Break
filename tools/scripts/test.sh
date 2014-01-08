@@ -30,7 +30,11 @@ if [[ $# > 1 ]]; then
 			fi
 			echo -1 > $2_test_logs/$t.log.old;
 			echo 0 > $2_test_logs/$t.log.time.avg
-			(for i in `seq 1 1000000`; do 
+			RUNS=1000000;
+			if [[ $# > 4 ]]; then
+				RUNS=$5;
+			fi	
+			(for i in `seq 1 $RUNS`; do 
 				echo $i > $2_test_logs/$t.log;
 				cd $2_test_logs/$t/;
 				case $4 in
