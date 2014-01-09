@@ -29,7 +29,7 @@ using namespace std;
 //#define DEBUG
 
 static int getRandomWaitTime(int scale = 1){
-	return WAIT_TIME+((rand()%(WAIT_TIME/2))*scale);
+	return WAIT_TIME/2+1+((rand()%(WAIT_TIME))*scale);
 }
 
 
@@ -648,7 +648,9 @@ void finalize(){
 
 void beforeStore(void* address, int32_t loc){
 	//printf("store %p\n", address);
-	usleep(getRandomWaitTime());
+	//usleep(getRandomWaitTime());
+	//sched_yield();
+	usleep(rand()%5+1);
 }
 
 void afterStore(void* address, int32_t loc){
