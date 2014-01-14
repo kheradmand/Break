@@ -25,7 +25,7 @@
 using namespace std;
 
 
-#define WAIT_TIME 100
+#define WAIT_TIME 1
 //#define DEBUG
 
 static int getRandomWaitTime(int scale = 1){
