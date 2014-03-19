@@ -1,0 +1,203 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/6828/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src
+END
+GUSIConfig.cp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/GUSIConfig.cp
+END
+Makefile_backup
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/Makefile_backup
+END
+serial.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/serial.h
+END
+makefile.linux
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/makefile.linux
+END
+loopback.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/loopback.c
+END
+wsock.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/wsock.h
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/6707/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/Makefile
+END
+hawkNL.exp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/hawkNL.exp
+END
+loopback.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/loopback.h
+END
+hawknl.def
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/hawknl.def
+END
+AllHawkNL.ll
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/AllHawkNL.ll
+END
+mutex.c
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/mutex.c
+END
+makefile.osx
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/makefile.osx
+END
+thread.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/thread.c
+END
+crc.c
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/crc.c
+END
+nl.c
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6675/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/nl.c
+END
+errorstr.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/errorstr.c
+END
+condition.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/condition.c
+END
+nltime.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/nltime.c
+END
+err.c
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/err.c
+END
+deadlock3.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/6828/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/deadlock3.c
+END
+readme.txt
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/readme.txt
+END
+deadlock4.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/deadlock4.c
+END
+group.c
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/group.c
+END
+NLchanges.txt
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/NLchanges.txt
+END
+sock.c
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/sock.c
+END
+ipx.c
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/ipx.c
+END
+parallel.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/parallel.h
+END
+sock.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/sock.h
+END
+ipx.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/ipx.h
+END
+makefile.solaris
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/makefile.solaris
+END
+nlinternal.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/nlinternal.h
+END
+makefile.mingw
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/src/makefile.mingw
+END

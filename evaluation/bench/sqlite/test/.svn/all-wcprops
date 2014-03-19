@@ -1,0 +1,1091 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test
+END
+btree.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/btree.test
+END
+bindxfer.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/bindxfer.test
+END
+insert.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/insert.test
+END
+enc.test
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/enc.test
+END
+select6.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/select6.test
+END
+manydb.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/manydb.test
+END
+where.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/where.test
+END
+misc1.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/misc1.test
+END
+sync.test
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/sync.test
+END
+temptable.test
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/temptable.test
+END
+expr.test
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/expr.test
+END
+subquery.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/subquery.test
+END
+busy.test
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/busy.test
+END
+vacuum2.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/vacuum2.test
+END
+join4.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/join4.test
+END
+main.test
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/main.test
+END
+tkt1449.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/tkt1449.test
+END
+delete3.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/delete3.test
+END
+insert2.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/insert2.test
+END
+attach3.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/attach3.test
+END
+types3.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/types3.test
+END
+trigger5.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/trigger5.test
+END
+minmax.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/minmax.test
+END
+corrupt.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/corrupt.test
+END
+auth.test
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/auth.test
+END
+select3.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/select3.test
+END
+varint.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/varint.test
+END
+utf16.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/utf16.test
+END
+aggerror.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/aggerror.test
+END
+collate5.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/collate5.test
+END
+lock3.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/lock3.test
+END
+pager3.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/pager3.test
+END
+tableapi.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/tableapi.test
+END
+tkt1567.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/tkt1567.test
+END
+trigger2.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/trigger2.test
+END
+btree6.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/btree6.test
+END
+enc2.test
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/enc2.test
+END
+alter2.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/alter2.test
+END
+malloc4.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/malloc4.test
+END
+pager.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/pager.test
+END
+capi2.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/capi2.test
+END
+altermalloc.test
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/altermalloc.test
+END
+laststmtchanges.test
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/laststmtchanges.test
+END
+descidx1.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/descidx1.test
+END
+tclsqlite.test
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/tclsqlite.test
+END
+collate2.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/collate2.test
+END
+shared.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/shared.test
+END
+pragma.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/pragma.test
+END
+tkt1512.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/tkt1512.test
+END
+quick.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/quick.test
+END
+misc3.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/misc3.test
+END
+limit.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/limit.test
+END
+tkt1443.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/tkt1443.test
+END
+tkt1536.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/tkt1536.test
+END
+memdb.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/memdb.test
+END
+colmeta.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/colmeta.test
+END
+default.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/default.test
+END
+lastinsert.test
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/lastinsert.test
+END
+between.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/between.test
+END
+cast.test
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/cast.test
+END
+trigger7.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/trigger7.test
+END
+reindex.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/reindex.test
+END
+join.test
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/join.test
+END
+schema.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/schema.test
+END
+conflict.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/conflict.test
+END
+autoinc.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/autoinc.test
+END
+select5.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/select5.test
+END
+progress.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/progress.test
+END
+attach.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/attach.test
+END
+types.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/types.test
+END
+in.test
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/in.test
+END
+unique.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/unique.test
+END
+autovacuum_ioerr2.test
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/autovacuum_ioerr2.test
+END
+format4.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/format4.test
+END
+fkey1.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/fkey1.test
+END
+ioerr.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/ioerr.test
+END
+corrupt2.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/corrupt2.test
+END
+join3.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/join3.test
+END
+intpkey.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/intpkey.test
+END
+crashtest1.c
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/crashtest1.c
+END
+delete2.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/delete2.test
+END
+attach2.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/attach2.test
+END
+types2.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/types2.test
+END
+table.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/table.test
+END
+trigger4.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/trigger4.test
+END
+rollback.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/rollback.test
+END
+btree8.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/btree8.test
+END
+subselect.test
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/subselect.test
+END
+safety.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/safety.test
+END
+notnull.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/notnull.test
+END
+func.test
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/func.test
+END
+interrupt.test
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/interrupt.test
+END
+where3.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/where3.test
+END
+distinctagg.test
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/distinctagg.test
+END
+vacuum.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/vacuum.test
+END
+select2.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/select2.test
+END
+capi3b.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/capi3b.test
+END
+analyze.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/analyze.test
+END
+descidx3.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/descidx3.test
+END
+malloc.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/malloc.test
+END
+index.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/index.test
+END
+collate4.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/collate4.test
+END
+lock2.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/lock2.test
+END
+bind.test
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/bind.test
+END
+async.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/async.test
+END
+tkt1514.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/tkt1514.test
+END
+shared_err.test
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/shared_err.test
+END
+pager2.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/pager2.test
+END
+misc5.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/misc5.test
+END
+tkt1473.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/tkt1473.test
+END
+trigger1.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/trigger1.test
+END
+btree5.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/btree5.test
+END
+shared2.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/shared2.test
+END
+bigrow.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/bigrow.test
+END
+thread2.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/thread2.test
+END
+malloc3.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/malloc3.test
+END
+index3.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/index3.test
+END
+attachmalloc.test
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/attachmalloc.test
+END
+quote.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/quote.test
+END
+crash.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/crash.test
+END
+delete.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/delete.test
+END
+collate1.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/collate1.test
+END
+select7.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/select7.test
+END
+pagesize.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/pagesize.test
+END
+all.test
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/all.test
+END
+null.test
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/null.test
+END
+memleak.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/memleak.test
+END
+misc2.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/misc2.test
+END
+date.test
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/date.test
+END
+blob.test
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/blob.test
+END
+avtrans.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/avtrans.test
+END
+tkt1644.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/tkt1644.test
+END
+btree2.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/btree2.test
+END
+join5.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/join5.test
+END
+insert3.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/insert3.test
+END
+autovacuum_ioerr.test
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/autovacuum_ioerr.test
+END
+autovacuum.test
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/autovacuum.test
+END
+trigger6.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/trigger6.test
+END
+threadtest1.c
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/threadtest1.c
+END
+bigfile.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/bigfile.test
+END
+select4.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/select4.test
+END
+misuse.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/misuse.test
+END
+alter.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/alter.test
+END
+collate6.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/collate6.test
+END
+view.test
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/view.test
+END
+diskfull.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/diskfull.test
+END
+tkt1435.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/tkt1435.test
+END
+join2.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/join2.test
+END
+update.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/update.test
+END
+rowid.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/rowid.test
+END
+trigger3.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/trigger3.test
+END
+btree7.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/btree7.test
+END
+enc3.test
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/enc3.test
+END
+alter3.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/alter3.test
+END
+journal1.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/journal1.test
+END
+malloc5.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/malloc5.test
+END
+where2.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/where2.test
+END
+trace.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/trace.test
+END
+capi3.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/capi3.test
+END
+select1.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/select1.test
+END
+printf.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/printf.test
+END
+descidx2.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/descidx2.test
+END
+collate3.test
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/collate3.test
+END
+autovacuum_crash.test
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/autovacuum_crash.test
+END
+tester.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/tester.tcl
+END
+tkt1501.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/tkt1501.test
+END
+check.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/check.test
+END
+misc4.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/misc4.test
+END
+tkt1444.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/tkt1444.test
+END
+tkt1537.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/tkt1537.test
+END
+like.test
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/like.test
+END
+btree4.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/btree4.test
+END
+server1.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/server1.test
+END
+sort.test
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/sort.test
+END
+trans.test
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/trans.test
+END
+lock.test
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/lock.test
+END
+thread1.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/thread1.test
+END
+malloc2.test
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/malloc2.test
+END
+index2.test
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/index2.test
+END
+threadtest2.c
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/threadtest2.c
+END
+hook.test
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/test/hook.test
+END

@@ -1,0 +1,9 @@
+clang++ -g -c -emit-llvm -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_POSIX_PTHREAD_SEMANTICS -DUSE_STACKSIZE_CUSTOMIZATION -pthread pbzip2.cpp -o pbzip2.bc
+opt -load /home/ali/Desktop/Break/build33/Debug+Asserts/lib/Instrumentation.so -lock-instrument -o pbzip2.li < pbzip2.bc
+clang++ -g -c -emit-llvm -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_POSIX_PTHREAD_SEMANTICS -DUSE_STACKSIZE_CUSTOMIZATION -pthread BZ2StreamScanner.cpp -o BZ2StreamScanner.bc
+opt -load /home/ali/Desktop/Break/build33/Debug+Asserts/lib/Instrumentation.so -lock-instrument -o BZ2StreamScanner.li < BZ2StreamScanner.bc
+clang++ -g -c -emit-llvm -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_POSIX_PTHREAD_SEMANTICS -DUSE_STACKSIZE_CUSTOMIZATION -pthread ErrorContext.cpp -o ErrorContext.bc
+opt -load /home/ali/Desktop/Break/build33/Debug+Asserts/lib/Instrumentation.so -lock-instrument -o ErrorContext.li < ErrorContext.bc
+clang++ -g -c -o YI.o /home/ali/DSLab/Break/tools/YieldInjector/YieldInjector.cpp
+clang++ -g  -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_POSIX_PTHREAD_SEMANTICS -DUSE_STACKSIZE_CUSTOMIZATION -pthread -o pbzip2-yi -I. -L. pbzip2.li BZ2StreamScanner.li ErrorContext.li libbz2.a YI.o -lbz2 -lpthread
+rm pbzip2.bc ErrorContext.bc BZ2StreamScanner.bc

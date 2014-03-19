@@ -1,0 +1,329 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www
+END
+arch.fig
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/arch.fig
+END
+arch.gif
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/arch.gif
+END
+speed.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/speed.tcl
+END
+conflict.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/conflict.tcl
+END
+autoinc.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/autoinc.tcl
+END
+omitted.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/omitted.tcl
+END
+index.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/index.tcl
+END
+download.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/download.tcl
+END
+copyright.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/copyright.tcl
+END
+changes.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/changes.tcl
+END
+copyright-release.html
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/copyright-release.html
+END
+version3.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/version3.tcl
+END
+index-ex1-x-b.gif
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/index-ex1-x-b.gif
+END
+support.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/support.tcl
+END
+arch.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/arch.tcl
+END
+vdbe.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/vdbe.tcl
+END
+lang.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/lang.tcl
+END
+arch2.fig
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/arch2.fig
+END
+arch2.gif
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/arch2.gif
+END
+optimizer.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/optimizer.tcl
+END
+arch2b.fig
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/arch2b.fig
+END
+indirect1b1.gif
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/indirect1b1.gif
+END
+compile.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/compile.tcl
+END
+formatchng.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/formatchng.tcl
+END
+common.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/common.tcl
+END
+table-ex1b2.gif
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/table-ex1b2.gif
+END
+sharedcache.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/sharedcache.tcl
+END
+quickstart.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/quickstart.tcl
+END
+capi3ref.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/capi3ref.tcl
+END
+nulls.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/nulls.tcl
+END
+datatypes.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/datatypes.tcl
+END
+datatype3.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/datatype3.tcl
+END
+capi3.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/capi3.tcl
+END
+lockingv3.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/lockingv3.tcl
+END
+sqlite.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/sqlite.tcl
+END
+c_interface.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/c_interface.tcl
+END
+tclsqlite.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/tclsqlite.tcl
+END
+different.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/different.tcl
+END
+audit.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/audit.tcl
+END
+pragma.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/pragma.tcl
+END
+faq.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/faq.tcl
+END
+opcode.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/opcode.tcl
+END
+oldnews.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/oldnews.tcl
+END
+arch.png
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/arch.png
+END
+direct1b.gif
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/direct1b.gif
+END
+mingw.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/mingw.tcl
+END
+whentouse.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/whentouse.tcl
+END
+fileformat.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/fileformat.tcl
+END
+docs.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/docs.tcl
+END
+optimizing.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/optimizing.tcl
+END
+shared.gif
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/shared.gif
+END
+optoverview.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/optoverview.tcl
+END
+dynload.tcl
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/dynload.tcl
+END
+fullscanb.gif
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/www/fullscanb.gif
+END

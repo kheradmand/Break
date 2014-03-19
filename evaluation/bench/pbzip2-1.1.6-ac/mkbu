@@ -1,0 +1,107 @@
+# Make file for parallel BZIP2
+SHELL = /bin/sh
+
+# Compiler to use
+CC = g++
+CFLAGS = -O2
+#CFLAGS += -g -Wall
+#CFLAGS += -ansi
+#CFLAGS += -pedantic
+#CFLAGS += -std=c++0x
+
+# Comment out CFLAGS line below for compatability mode for 32bit file sizes
+# (less than 2GB) and systems that have compilers that treat int as 64bit
+# natively (ie: modern AIX)
+CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -I.
+
+# Uncomment CFLAGS line below if you want to compile pbzip2 without load
+# average support for systems that do not support it
+#CFLAGS += -DPBZIP_NO_LOADAVG
+
+# Uncomment CFLAGS line below to get debug output
+#CFLAGS += -DPBZIP_DEBUG
+
+# Comment out CFLAGS line below to disable pthread semantics in code
+CFLAGS += -D_POSIX_PTHREAD_SEMANTICS
+
+# Comment out CFLAGS line below to disable Thread stack size customization
+CFLAGS += -DUSE_STACKSIZE_CUSTOMIZATION
+
+# Comment out CFLAGS line below to explicity set ignore trailing garbage
+# default behavior: 0 - disabled; 1 - enabled (ignore garbage by default)
+# If IGNORE_TRAILING_GARBAGE is not defined: behavior is automatically determined
+# by program name: bzip2, bunzip2, bzcat - ignore garbage; otherwise - not.
+#CFLAGS += -DIGNORE_TRAILING_GARBAGE=1
+
+# On some compilers -pthreads
+CFLAGS += -pthread
+
+# External libraries
+LDFLAGS = 
+LDFLAGS += -lpthread
+
+# Where you want pbzip2 installed when you do 'make install'
+PREFIX = /usr
+
+
+all: pbzip2-static
+
+# Standard pbzip2 compile
+pbzip2: pbzip2.cpp BZ2StreamScanner.cpp ErrorContext.cpp
+	$(CC) $(CFLAGS) $^ -o pbzip2 $(LDFLAGS)
+
+# Choose this if you want to compile in a static version of the libbz2 library
+pbzip2-static: pbzip2.cpp BZ2StreamScanner.cpp ErrorContext.cpp libbz2.a
+	$(CC) $(CFLAGS) $^ -o pbzip2 -I. -L. $(LDFLAGS)
+
+
+OPT = opt -load /home/ali/Desktop/Break/build33/Debug+Asserts/lib/Instrumentation.so
+LOCK_INSTRUMENTER = $(OPT) -lock-instrument -debug-only=lock-instrument
+MEM_INSTRUMENTER = $(OPT) -mem-instrument 
+BREAK = /home/ali/DSLab/Break
+YISRC = $(BREAK)/tools/YieldInjector/YieldInjector.cpp
+LTSRC = $(BREAK)/tools/LockTracer/LockTracer.cpp
+#######################################################################
+
+%.bc: %.cpp
+	clang++ -g -c -emit-llvm $(filter-out -O2,$(CFLAGS)) $< -o $@
+%.li.bc: %.bc
+	$(LOCK_INSTRUMENTER) -o $@ < $<
+%.mi.bc: %.li.bc
+	$(MEM_INSTRUMENTER) -o $@ < $<
+
+YI.o: $(YISRC)
+	clang++ -g -c -o $@ $<
+
+LT.o: $(LTSRC)
+	clang++ -g -c -o $@ $<
+
+break-yi: pbzip2.li.bc BZ2StreamScanner.li.bc ErrorContext.li.bc libbz2.a YI.o
+	clang++ -g  $(filter-out -O2,$(CFLAGS)) -o $@ -I. -L. $^ $(LDFLAGS)
+	
+break-lt: pbzip2.mi.bc BZ2StreamScanner.mi.bc ErrorContext.mi.bc libbz2.a LT.o
+	clang++ -g  $(filter-out -O2,$(CFLAGS)) -o $@ -I. -L. $^ $(LDFLAGS)
+	
+libbz2.a: bzip2-1.0.6 
+	cd bzip2-1.0.6 && make > /dev/null 2> /dev/null
+	cp bzip2-1.0.6/libbz2.a ./
+	cp bzip2-1.0.6/bzlib.h ./
+
+
+#######################################################################
+
+# Install the binary pbzip2 program and man page
+install: pbzip2
+	if ( test ! -d $(PREFIX)/bin ) ; then mkdir -p $(PREFIX)/bin ; fi
+	if ( test ! -d $(PREFIX)/man ) ; then mkdir -p $(PREFIX)/man ; fi
+	if ( test ! -d $(PREFIX)/man/man1 ) ; then mkdir -p $(PREFIX)/man/man1 ; fi
+	cp -f pbzip2 $(PREFIX)/bin/pbzip2
+	chmod a+x $(PREFIX)/bin/pbzip2
+	ln -s -f $(PREFIX)/bin/pbzip2 $(PREFIX)/bin/pbunzip2
+	ln -s -f $(PREFIX)/bin/pbzip2 $(PREFIX)/bin/pbzcat
+	cp -f pbzip2.1 $(PREFIX)/man/man1
+	chmod a+r $(PREFIX)/man/man1/pbzip2.1
+
+clean:
+	rm -f *.o *.bc location-index-map.txt pbzip2 break-yi break-lt libbz2.a
+	cd bzip2-1.0.6 && make clean

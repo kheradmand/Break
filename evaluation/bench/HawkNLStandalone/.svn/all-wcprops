@@ -1,0 +1,137 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/6828/src/immunity/deadlock/TestPrograms/HawkNLStandalone
+END
+Test_async.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/Test_async.dsp
+END
+Test_async_WCE.vcp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/Test_async_WCE.vcp
+END
+HawkNL.mcp
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/HawkNL.mcp
+END
+Test_getfile.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/Test_getfile.dsp
+END
+Test_timer.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/Test_timer.dsp
+END
+HawkNL_WCE.vcl
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/HawkNL_WCE.vcl
+END
+HawkNL_WCE.vco
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/HawkNL_WCE.vco
+END
+HawkNL_WCE.vcp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/HawkNL_WCE.vcp
+END
+HawkNL.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/HawkNL.dsp
+END
+Test_max.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/Test_max.dsp
+END
+HawkNL_static.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/HawkNL_static.dsp
+END
+HawkNL_WCE.vcw
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/HawkNL_WCE.vcw
+END
+HawkNL.dsw
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/HawkNL.dsw
+END
+README.macintosh
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/README.macintosh
+END
+Test_overrun.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/Test_overrun.dsp
+END
+Test_thread_pool.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/Test_thread_pool.dsp
+END
+HawkNL.opt
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/HawkNL.opt
+END
+Test_broadcast.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/Test_broadcast.dsp
+END
+Build_Everything.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/Build_Everything.dsp
+END
+Test_clientserver.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/Test_clientserver.dsp
+END
+Test_multicast.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/Test_multicast.dsp
+END
+Test_buffer.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/6009/src/immunity/deadlock/TestPrograms/HawkNLStandalone/Test_buffer.dsp
+END

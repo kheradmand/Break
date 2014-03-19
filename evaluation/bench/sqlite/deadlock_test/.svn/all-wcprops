@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/6688/src/immunity/deadlock/TestPrograms/sqlite/deadlock_test
+END
+deadlock.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/6688/src/immunity/deadlock/TestPrograms/sqlite/deadlock_test/deadlock.c
+END
+deadlock2.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/deadlock_test/deadlock2.c
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/6688/src/immunity/deadlock/TestPrograms/sqlite/deadlock_test/Makefile
+END
+deadlock
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/6681/src/immunity/deadlock/TestPrograms/sqlite/deadlock_test/deadlock
+END
