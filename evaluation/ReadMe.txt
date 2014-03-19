@@ -132,7 +132,7 @@ RUNNING THE TESTS WITH DEBUG INFO:
 
 
 CBD WITH LP:
-if you want to use CBD with LP instead of MP, rename tools/LockTracer/LockTracer-mp.cpp into LockTracer.cpp. If you want to measure overhead, you should disable memory instrumentation too. For this puporse edit Makefiles or mymake.sh files to remove the line containing "opt -load $BREAKOBJ/Instrumentation.so -mem-instrument ..."
+if you want to use CBD with LP instead of MP, rename tools/LockTracer/LockTracer-lp.cpp into LockTracer.cpp. If you want to measure overhead, you should disable memory instrumentation too. For this puporse edit Makefiles or mymake.sh files to remove the line containing "opt -load $BREAKOBJ/Instrumentation.so -mem-instrument ..."
 
 
 
